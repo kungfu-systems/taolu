@@ -104,4 +104,4 @@ jobs:
       merge-method: rebase
       dry-run: false
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.BUILDCHAIN_PROMOTION_TOKEN }}
