@@ -1,0 +1,105 @@
+name: Buildchain Dev Delivery
+
+run-name: "Taolu PR #${{ inputs.expected-pr-number }} · Buildchain v4 Delivery Warrant"
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected-pr-number:
+        description: Exact Taolu pull request number
+        type: number
+        required: true
+      expected-head-sha:
+        description: Exact 40-character pull request head
+        type: string
+        required: true
+      source-workflow-run-id:
+        description: Exact successful Verify workflow run
+        type: number
+        required: true
+      assignment-root:
+        description: Exact native Assignment work-definition root
+        type: string
+        required: true
+      initiative-root:
+        description: Exact native Initiative version root
+        type: string
+        required: true
+      source-identity-root:
+        description: Immutable source identity root
+        type: string
+        required: true
+      source-patch-root:
+        description: Immutable source patch root
+        type: string
+        required: true
+      plan-root:
+        description: Exact qualification plan root
+        type: string
+        required: true
+      closure-root:
+        description: Exact affected-closure root
+        type: string
+        required: true
+      dependency-root:
+        description: Exact dependency graph root
+        type: string
+        required: true
+      toolchain-root:
+        description: Exact qualification toolchain root
+        type: string
+        required: true
+      environment-root:
+        description: Exact native execution environment root
+        type: string
+        required: true
+      affected-paths-json:
+        description: JSON paths covered by native qualification
+        type: string
+        required: true
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: write
+
+jobs:
+  deliver:
+    uses: kungfu-systems/buildchain/.github/workflows/dev-pr-auto-merge.yml@v4-alpha
+    with:
+      buildchain-repository: kungfu-systems/buildchain
+      buildchain-ref: v4-alpha
+      target-branch: dev/v1/v1.0
+      expected-pr-number: ${{ inputs.expected-pr-number }}
+      expected-head-sha: ${{ inputs.expected-head-sha }}
+      source-workflow-run-id: ${{ inputs.source-workflow-run-id }}
+      handoff-workflow-id: dev-delivery.yml
+      source-workflow-id: verify.yml
+      delivery-warrant-mode: required
+      assignment-root: ${{ inputs.assignment-root }}
+      initiative-root: ${{ inputs.initiative-root }}
+      source-identity-root: ${{ inputs.source-identity-root }}
+      source-patch-root: ${{ inputs.source-patch-root }}
+      plan-root: ${{ inputs.plan-root }}
+      closure-root: ${{ inputs.closure-root }}
+      dependency-root: ${{ inputs.dependency-root }}
+      toolchain-root: ${{ inputs.toolchain-root }}
+      environment-root: ${{ inputs.environment-root }}
+      affected-paths-json: ${{ inputs.affected-paths-json }}
+      native-command: go test -race ./... && go vet ./...
+      native-heartbeat-seconds: 30
+      delivery-class: native-proof-required
+      delivery-priority: ordinary
+      required-status-checks: |
+        stage-capsule / Reconcile exact three-platform evidence
+        build / Summarize build contract
+      queue-admission-context: Buildchain delivery admission
+      active-lease-context: Buildchain delivery lease
+      ready-label: ready
+      block-labels: blocked,do-not-merge,work-in-progress
+      allowed-head-prefixes: feature/,fix/,chore/,docs/,ci/,refactor/
+      landing-mode: direct
+      merge-method: rebase
+      dry-run: false
