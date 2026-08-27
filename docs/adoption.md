@@ -20,10 +20,12 @@ ai_provenance:
 
 A Site adopts Taolu without changing a product repository:
 
-1. Record the exact public GitHub Release metadata and official SHA-256 values.
-2. Update the Site-owned `taolu.catalog/v1` document.
-3. Run `taolu compile --catalog catalog.json --releases releases.json --out bundle.json` twice and require identical bytes.
-4. Publish `bundle.json` plus a configured copy of `bootstrap/install.sh` and `bootstrap/install.ps1` from the Site.
-5. Pin `TAOLU_VERSION`, the platform-specific Taolu digest, `TAOLU_BUNDLE_URL`, the compiled `TAOLU_BUNDLE_ROOT`, and `TAOLU_PRODUCT` in the Site response.
+1. Install an exact admitted Taolu release. On POSIX systems the public entrypoint is `curl -fsSL <exact-release>/taolu-install.sh | sh`; Windows downloads and executes `taolu-install.ps1`.
+2. Record the product's exact public GitHub Release metadata and official SHA-256 values in the Site.
+3. Update the Site-owned single-product `taolu.catalog/v1` document.
+4. Run `taolu installer --config catalog.json --releases releases.json --bundle-url <final-bundle-url> --out installer`.
+5. Publish the generated `bundle.json`, `install.sh`, and `install.ps1` from the Site. The scripts already bind the product ID and bundle root.
 
-Do not place those files or settings in a product repository. A Taolu bug fix changes the Site's Taolu version and runtime digest only; it does not require rebuilding the product release.
+`taolu compile` remains the lower-level deterministic bundle command. Normal consumers use `taolu installer`.
+
+Do not place Taolu, its workflow, or its generated files in a product repository. A Taolu bug fix changes the Site's admitted Taolu release and regenerates the Site publication unit only; it does not require rebuilding the product release.

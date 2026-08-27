@@ -20,6 +20,10 @@ on:
         description: Exact reviewed release-candidate SHA
         required: true
         type: string
+      alpha-dogfood-sha:
+        description: Exact alpha commit with successful three-platform self dogfood (required for stable)
+        required: false
+        type: string
 
 permissions:
   actions: write
@@ -31,7 +35,36 @@ permissions:
   pull-requests: write
 
 jobs:
+  alpha-dogfood-gate:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      statuses: read
+    steps:
+      - name: Require three-platform alpha dogfood before stable
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANNEL: ${{ inputs.channel }}
+          TARGET_SHA: ${{ inputs.target-sha }}
+          ALPHA_DOGFOOD_SHA: ${{ inputs.alpha-dogfood-sha }}
+        run: |
+          if [ "$CHANNEL" != release ]; then
+            echo "Alpha publication creates the candidate consumed by self dogfood."
+            exit 0
+          fi
+          test ${#ALPHA_DOGFOOD_SHA} -eq 40 || {
+            echo "Stable publication requires an exact alpha-dogfood-sha" >&2
+            exit 1
+          }
+          state=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${ALPHA_DOGFOOD_SHA}/status" \
+            --jq '.statuses[] | select(.context == "taolu-alpha-dogfood") | .state' | head -n 1)
+          test "$state" = success || {
+            echo "Stable publication requires successful taolu-alpha-dogfood on $ALPHA_DOGFOOD_SHA" >&2
+            exit 1
+          }
+
   promote:
+    needs: alpha-dogfood-gate
     uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
     with:
       buildchain-channel: stable

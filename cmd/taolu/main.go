@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/kungfu-systems/taolu/internal/compiler"
+	"github.com/kungfu-systems/taolu/internal/generator"
 	installer "github.com/kungfu-systems/taolu/internal/install"
 	productmeta "github.com/kungfu-systems/taolu/internal/product"
 )
@@ -22,7 +23,7 @@ func main() {
 }
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("usage: taolu <compile|install|rollback|status|version>")
+		return errors.New("usage: taolu <installer|compile|install|rollback|status|version>")
 	}
 	switch args[0] {
 	case "version":
@@ -44,6 +45,23 @@ func run(args []string) error {
 			return err
 		}
 		if err = compiler.Write(*out, bundle); err != nil {
+			return err
+		}
+		return emit(bundle)
+	case "installer":
+		fs := flag.NewFlagSet("installer", flag.ContinueOnError)
+		config := fs.String("config", "", "Site-owned taolu.catalog/v1 JSON")
+		releases := fs.String("releases", "", "pinned GitHub Release metadata JSON")
+		bundleURL := fs.String("bundle-url", "", "final HTTPS or rehearsal file URL for bundle.json")
+		out := fs.String("out", "installer", "output installer directory")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *config == "" || *releases == "" {
+			return errors.New("--config and --releases are required")
+		}
+		bundle, err := generator.Generate(*config, *releases, *bundleURL, *out)
+		if err != nil {
 			return err
 		}
 		return emit(bundle)

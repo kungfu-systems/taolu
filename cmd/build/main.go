@@ -10,6 +10,9 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
+
+	productmeta "github.com/kungfu-systems/taolu/internal/product"
 )
 
 func main() {
@@ -51,10 +54,33 @@ func run() error {
 		return err
 	}
 	sum := sha256.Sum256(b)
-	receipt := map[string]any{"schema": "taolu.build-receipt/v1", "platform": platform, "artifact": path, "sha256": hex.EncodeToString(sum[:]), "size": len(b)}
+	digest := hex.EncodeToString(sum[:])
+	if err := os.WriteFile(path+".sha256", []byte(digest+"  "+name+"\n"), 0o644); err != nil {
+		return err
+	}
+	if platform == "linux-x64" {
+		if err := packageBootstrap("bootstrap/install.sh", "dist/taolu-install.sh", 0o755); err != nil {
+			return err
+		}
+	}
+	if platform == "windows-x64" {
+		if err := packageBootstrap("bootstrap/install.ps1", "dist/taolu-install.ps1", 0o644); err != nil {
+			return err
+		}
+	}
+	receipt := map[string]any{"schema": "taolu.build-receipt/v1", "platform": platform, "artifact": path, "sha256": digest, "size": len(b)}
 	out, _ := json.MarshalIndent(receipt, "", "  ")
 	out = append(out, '\n')
 	return os.WriteFile(".buildchain/build.receipt", out, 0o644)
+}
+
+func packageBootstrap(source, destination string, mode os.FileMode) error {
+	b, err := os.ReadFile(source)
+	if err != nil {
+		return err
+	}
+	b = []byte(strings.ReplaceAll(string(b), "@TAOLU_VERSION@", productmeta.Version))
+	return os.WriteFile(destination, b, mode)
 }
 
 func targetForPlatform(platform string) (string, string, error) {

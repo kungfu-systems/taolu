@@ -1,0 +1,83 @@
+name: Self Dogfood
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Exact published alpha tag
+        required: true
+        type: string
+      target-sha:
+        description: Exact alpha commit qualified by this run
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  unix:
+    name: Consume public installer (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            platform: darwin-arm64
+          - runner: ubuntu-24.04
+            platform: linux-x64
+    runs-on: ${{ matrix.runner }}
+    env:
+      TAOLU_DOGFOOD_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      TAOLU_DOGFOOD_PLATFORM: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install released Taolu and generate its installer
+        env:
+          TAOLU_DOGFOOD_WORK: ${{ runner.temp }}/taolu-self-dogfood
+        run: dogfood/self.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taolu-self-installer-${{ matrix.platform }}
+          path: ${{ runner.temp }}/taolu-self-dogfood/installer
+
+  windows:
+    name: Consume public installer (windows-x64)
+    runs-on: windows-2025
+    env:
+      TAOLU_DOGFOOD_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      TAOLU_DOGFOOD_PLATFORM: windows-x64
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install released Taolu and generate its installer
+        shell: pwsh
+        env:
+          TAOLU_DOGFOOD_WORK: ${{ runner.temp }}/taolu-self-dogfood
+        run: ./dogfood/self.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taolu-self-installer-windows-x64
+          path: ${{ runner.temp }}/taolu-self-dogfood/installer
+
+  qualify:
+    name: Qualify alpha
+    if: always()
+    needs: [unix, windows]
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_SHA: ${{ inputs.target-sha || github.event.release.target_commitish }}
+      RESULT: ${{ needs.unix.result == 'success' && needs.windows.result == 'success' && 'success' || 'failure' }}
+    steps:
+      - name: Publish exact alpha dogfood status
+        run: |
+          test "$TARGET_SHA" != "" && test ${#TARGET_SHA} -eq 40
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" \
+            -f state="$RESULT" \
+            -f context='taolu-alpha-dogfood' \
+            -f description="Three-platform public-release self consumption: $RESULT" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          test "$RESULT" = success
