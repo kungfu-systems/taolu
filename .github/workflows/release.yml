@@ -69,6 +69,7 @@ jobs:
     uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
     with:
       buildchain-channel: stable
+      buildchain-ref: v4
       buildchain-contract-lock-path: .buildchain/contract-lock.json
       buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
       buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
