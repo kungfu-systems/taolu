@@ -207,7 +207,11 @@ func fetch(rawURL, destination, digest string, expectedSize int64) error {
 		return err
 	}
 	if u.Scheme == "file" {
-		src, err := os.Open(filepath.FromSlash(u.Path))
+		path := u.Path
+		if len(path) >= 3 && path[0] == '/' && path[2] == ':' {
+			path = path[1:]
+		}
+		src, err := os.Open(filepath.FromSlash(path))
 		if err != nil {
 			return err
 		}
