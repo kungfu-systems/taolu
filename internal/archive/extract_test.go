@@ -10,6 +10,25 @@ import (
 	"testing"
 )
 
+func TestExtractFileUsesDeclaredEntrypoint(t *testing.T) {
+	root := t.TempDir()
+	source := filepath.Join(root, "content-addressed-cache")
+	if err := os.WriteFile(source, []byte("taolu"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	destination := filepath.Join(root, "out")
+	if err := ExtractFile(source, destination, "bin/taolu"); err != nil {
+		t.Fatal(err)
+	}
+	b, err := os.ReadFile(filepath.Join(destination, "bin", "taolu"))
+	if err != nil || string(b) != "taolu" {
+		t.Fatalf("declared raw-file entrypoint was not produced: %v", err)
+	}
+	if err := ExtractFile(source, destination, "../escape"); err == nil {
+		t.Fatal("expected unsafe entrypoint rejection")
+	}
+}
+
 func TestZipRejectsTraversal(t *testing.T) {
 	p := filepath.Join(t.TempDir(), "bad.zip")
 	f, _ := os.Create(p)
