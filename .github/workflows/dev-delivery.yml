@@ -88,7 +88,7 @@ jobs:
       toolchain-root: ${{ inputs.toolchain-root }}
       environment-root: ${{ inputs.environment-root }}
       affected-paths-json: ${{ inputs.affected-paths-json }}
-      native-command: go test -race ./... && go vet ./...
+      native-command: "go test -race ./... && go vet ./..."
       native-heartbeat-seconds: 30
       delivery-class: native-proof-required
       delivery-priority: ordinary
@@ -103,3 +103,5 @@ jobs:
       landing-mode: direct
       merge-method: rebase
       dry-run: false
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
