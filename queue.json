@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 74,
+  "generation": 75,
   "fencingCounter": 10,
   "policy": {
     "agingSeconds": 900,
@@ -11,50 +11,7 @@
     "leaseSeconds": 3600,
     "emergencyPolicy": "reviewed-explicit-only"
   },
-  "activeWarrant": {
-    "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "qualified",
-    "repository": "kungfu-systems/taolu",
-    "protectedBase": "dev/v1/v1.0",
-    "candidateId": "sha256:68884770bf1beaebfb339811c0a0aa07e4fc4360b34bc8e6017881ee237396e4",
-    "pullRequestNumber": 19,
-    "sourceHead": "3c2bcb4b93d6eeb67b68b62a31e34babaf6ac6aa",
-    "assignmentRoot": "sha256:e6d9aba831654ea3959c5adef511e3035a55e96b04f72e3422bc33e3cf7b38c9",
-    "initiativeRoot": "sha256:71d3bf67607ad7ca26270805bd0b37febb532889f0eeeff083726556e16f2288",
-    "sourceIdentityRoot": "sha256:dc7f0421053cb3c30379fe63918a354139e42998515b74ae9cdd9d72b4ba4d70",
-    "sourcePatchRoot": "sha256:c082e69487002dc38809c337b230da0d408e0b939044479d77116dbfdf8470b7",
-    "sourceProofRoot": "sha256:1a84f916443e61191f60871f726f8025a88795864eb7d1fc8410458fb5006ea2",
-    "planRoot": "sha256:7037e96cafa88d5c3530e1ed6276707dd8139ca88aebdecb7fc8e52a2a151bb8",
-    "closureRoot": "sha256:817327d1406834dbd918ff1812b122131969a9a808cb743c4603f95995aad694",
-    "dependencyRoot": "sha256:a041473939c9617b54085f5b261bb60a3390942901fd48b8451ae143a3e339dc",
-    "toolchainRoot": "sha256:1c537541c6841292e33d2fdf38c2d372fc4226b982c86ff7962e32534f9b4afa",
-    "environmentRoot": "sha256:c2cc1bbfd64ef215c151eba8f6dac33998d81b2c68e9241c319b36b4bdacf639",
-    "nativeCommandContract": {
-      "schema": "kungfu.buildchain.native-command-contract/v1",
-      "runner": "bash-lc",
-      "command": "go test -race ./... && go vet ./...",
-      "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
-    },
-    "affectedPaths": [
-      ".github/CODEOWNERS"
-    ],
-    "shardEvidenceRoots": [],
-    "sourceWorkflowRunId": 33118953137,
-    "deliveryClass": "native-proof-required",
-    "priority": "ordinary",
-    "generation": 10,
-    "expectedOldStateRoot": "sha256:b8cc17e051ba06191a23d2691a91ed2aae8f35112e13ea752e8db1621fe0f620",
-    "issuedAt": "2026-08-27T21:50:16.896Z",
-    "expiresAt": "2026-08-27T22:51:40.749Z",
-    "fencingToken": "sha256:4757526524908e96572c165a777b0afa2165017200d3eae44442aabde93cdf37",
-    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
-    "heartbeatAt": "2026-08-27T21:51:40.749Z",
-    "nativeProofRoot": "sha256:c7be43fa42af07b5d481c1a2ef87f3156234ce6c6d66d1926b4f314322262cab",
-    "nativeExecutionReceiptRoot": "sha256:ccd2095a20d5cc9b43c8da52d509195beb13438d7d2edd321e09d7adbb2a8d5b",
-    "nativeProofReuseRoot": "sha256:5105e3e30ae5c39a3701bf6a139b792dad7886772286335386f0a284d9f0f2bd",
-    "qualificationReceiptRoot": "sha256:8527ed7274b4ca8fa8a02c6064eab1b56ee718bf06cf38d5d414ed808a241b36",
-    "qualifiedAt": "2026-08-27T21:52:18.406Z"
-  },
+  "activeWarrant": null,
   "candidates": [
     {
       "repository": "kungfu-systems/taolu",
@@ -564,17 +521,24 @@
       "sourceWorkflowRunId": 33118953137,
       "priority": "ordinary",
       "enqueuedAt": "2026-08-27T21:45:17.351Z",
-      "updatedAt": "2026-08-27T21:52:18.406Z",
+      "updatedAt": "2026-08-27T21:53:52.616Z",
       "attempts": 2,
       "recoveries": 0,
-      "status": "qualified",
-      "terminal": null,
+      "status": "merged",
+      "terminal": {
+        "outcome": "merged",
+        "reason": "GitHub readback proves PR #19 exact qualified head landed through protected direct merge at a414176223d35a0e95396e52f7ec8dcdf2b20211.",
+        "evidenceRoot": "sha256:3427f2c1dcbccbb829c5e8e1d25c49c82bcc46b02651d647d97ff7f9ac98dadf",
+        "closedAt": "2026-08-27T21:53:52.616Z",
+        "fencingToken": "sha256:4757526524908e96572c165a777b0afa2165017200d3eae44442aabde93cdf37",
+        "leaseGeneration": 10
+      },
       "affectedPaths": [
         ".github/CODEOWNERS"
       ],
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T21:52:18.406Z",
-  "stateRoot": "sha256:d2e220a142f67adb640d7ee7f3145fb645f562d935ade1aaec1e5fd9edd71eeb"
+  "updatedAt": "2026-08-27T21:53:52.616Z",
+  "stateRoot": "sha256:c689d35bc392f71b7cdf2745ea4d1f8253b9c734deffa91d2aa3200947061431"
 }
