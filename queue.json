@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 13,
+  "generation": 14,
   "fencingCounter": 2,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:aeb09a05f578130a8f01a3cb393f15f4f57b907668d6b3cbe2a9b7edd248986c",
@@ -48,8 +48,13 @@
     "issuedAt": "2026-08-27T11:45:14.987Z",
     "expiresAt": "2026-08-27T12:46:38.893Z",
     "fencingToken": "sha256:a4211e2594be8faa5f96a24a3c41b4afc9688462bf83fb02ebd8844ca2000bd4",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-08-27T11:46:38.893Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-08-27T11:46:38.893Z",
+    "nativeProofRoot": "sha256:2239b34de799eb1a4caeafba232498bc5f09bed490dcc5ccbc139aa8ffdee03d",
+    "nativeExecutionReceiptRoot": "sha256:99d53faf332147d1f777a327a7099d539caf6d773cd822ea8d7f3db3dc89c19b",
+    "nativeProofReuseRoot": "sha256:56a8aefb971fcb127ce7b446291c43e3f3bfaf1e4b78b40ec3291d230acc4901",
+    "qualificationReceiptRoot": "sha256:c62ab5f4a942c59883652d6d0780bfc8c2bb321a557b0d9055067cfce16a5e74",
+    "qualifiedAt": "2026-08-27T11:46:57.776Z"
   },
   "candidates": [
     {
@@ -159,10 +164,10 @@
       "sourceWorkflowRunId": 33067532645,
       "priority": "ordinary",
       "enqueuedAt": "2026-08-27T11:38:54.642Z",
-      "updatedAt": "2026-08-27T11:46:38.893Z",
+      "updatedAt": "2026-08-27T11:46:57.776Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         "internal/product/version.json",
@@ -171,6 +176,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T11:46:38.893Z",
-  "stateRoot": "sha256:b4b622e5395f954e4a86dcc3714a645c89746eaf256b43b2eb3ffcc580168deb"
+  "updatedAt": "2026-08-27T11:46:57.776Z",
+  "stateRoot": "sha256:461fc09514172a762de725a4ba687bda20c5055e8a41c3fa50c95ef291ad5aab"
 }
