@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 6,
+  "generation": 7,
   "fencingCounter": 1,
   "policy": {
     "agingSeconds": 900,
@@ -167,8 +167,45 @@
         "testdata/releases.json"
       ],
       "shardEvidenceRoots": []
+    },
+    {
+      "repository": "kungfu-systems/taolu",
+      "protectedBase": "dev/v1/v1.0",
+      "pullRequestNumber": 4,
+      "assignmentRoot": "sha256:e6d9aba831654ea3959c5adef511e3035a55e96b04f72e3422bc33e3cf7b38c9",
+      "initiativeRoot": "sha256:71d3bf67607ad7ca26270805bd0b37febb532889f0eeeff083726556e16f2288",
+      "sourceIdentityRoot": "sha256:fe2e5711af72c472773b953c2f9c51ab5848d5b05b595893d13c977289075100",
+      "deliveryClass": "native-proof-required",
+      "candidateId": "sha256:aeb09a05f578130a8f01a3cb393f15f4f57b907668d6b3cbe2a9b7edd248986c",
+      "sourceHead": "50728f29c7a2cc2cd98a4086ad85c3636bcc09ff",
+      "sourcePatchRoot": "sha256:8331fc5353140b1ce0d5219ce046dcad8635abd762c3f4150fe93b5a77e0f0ed",
+      "sourceProofRoot": "sha256:228f7f3b5302f21d08246ab1940092fb61a6664fcd5980310192ff6ee1f3d860",
+      "planRoot": "sha256:5e3633a28172c96a87aab58005fda4a293134ba1adfac2c0cdad624b6b7ebcf1",
+      "closureRoot": "sha256:895e07efa6a70e4ab94a39930f08a3402ed8d5a194f52263b12295a6871ac8d0",
+      "dependencyRoot": "sha256:9cc95abe7bc53294975a6f5346e5abc0ce78259c8de4b4defb22eb17339fec98",
+      "toolchainRoot": "sha256:02ae1067a17bde73f3fdaac666b65fd200f4200e6eb48879de22eb425f6a09c0",
+      "environmentRoot": "sha256:730b3554069b75ee57a1d9f93b7f5699b017701d1d8508e5ce5c52a5605cef35",
+      "nativeCommandContract": {
+        "schema": "kungfu.buildchain.native-command-contract/v1",
+        "runner": "bash-lc",
+        "command": "go test -race ./... && go vet ./...",
+        "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
+      },
+      "sourceWorkflowRunId": 33067532645,
+      "priority": "ordinary",
+      "enqueuedAt": "2026-08-27T11:38:54.642Z",
+      "updatedAt": "2026-08-27T11:38:54.642Z",
+      "attempts": 1,
+      "recoveries": 0,
+      "status": "queued",
+      "terminal": null,
+      "affectedPaths": [
+        "internal/product/version.json",
+        "package.json"
+      ],
+      "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T11:19:43.840Z",
-  "stateRoot": "sha256:81fe23ee9aaa2e2a0fd416cab26c99400aa95917810862eee1712691f31934ce"
+  "updatedAt": "2026-08-27T11:38:54.642Z",
+  "stateRoot": "sha256:444461e6a11ae6d61e1c06706c471ddd9aa11662df7c1c7c19d5af1adaf70f49"
 }
