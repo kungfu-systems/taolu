@@ -6,7 +6,10 @@ on:
     branches: [dev/v1/v1.0]
 
 permissions:
+  actions: read
   contents: read
+  issues: write
+  id-token: write
 
 jobs:
   stage-capsule:
@@ -21,6 +24,11 @@ jobs:
 
   build:
     uses: kungfu-systems/buildchain/.github/workflows/build.yml@v4-alpha
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+      id-token: write
     with:
       buildchain-channel: alpha
       runner-preset: custom
