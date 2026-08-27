@@ -21,6 +21,7 @@ permissions:
 jobs:
   unix:
     name: Consume public installer (${{ matrix.platform }})
+    if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease
     strategy:
       fail-fast: false
       matrix:
@@ -46,6 +47,7 @@ jobs:
 
   windows:
     name: Consume public installer (windows-x64)
+    if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease
     runs-on: windows-2025
     env:
       TAOLU_DOGFOOD_TAG: ${{ inputs.tag || github.event.release.tag_name }}
@@ -64,18 +66,23 @@ jobs:
 
   qualify:
     name: Qualify alpha
-    if: always()
+    if: always() && (github.event_name == 'workflow_dispatch' || github.event.release.prerelease)
     needs: [unix, windows]
     runs-on: ubuntu-24.04
     env:
       GH_TOKEN: ${{ github.token }}
       TARGET_SHA: ${{ inputs.target-sha || github.event.release.target_commitish }}
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
       RESULT: ${{ needs.unix.result == 'success' && needs.windows.result == 'success' && 'success' || 'failure' }}
     steps:
       - name: Publish exact alpha dogfood status
         run: |
-          test "$TARGET_SHA" != "" && test ${#TARGET_SHA} -eq 40
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" \
+          target_sha="$TARGET_SHA"
+          if [ ${#target_sha} -ne 40 ]; then
+            target_sha=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${RELEASE_TAG}" --jq .sha)
+          fi
+          test ${#target_sha} -eq 40
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${target_sha}" \
             -f state="$RESULT" \
             -f context='taolu-alpha-dogfood' \
             -f description="Three-platform public-release self consumption: $RESULT" \
