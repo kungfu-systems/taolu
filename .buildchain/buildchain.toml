@@ -14,7 +14,7 @@ path = "internal/product/version.json"
 key = "version"
 
 [lifecycle.install]
-command = "mkdir -p .buildchain && go env GOVERSION > .buildchain/install.receipt"
+command = "go env GOVERSION > .buildchain/install.receipt"
 
 [lifecycle.build]
 command = "go run ./cmd/build"
