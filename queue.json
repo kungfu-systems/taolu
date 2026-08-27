@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 8,
+  "generation": 9,
   "fencingCounter": 1,
   "policy": {
     "agingSeconds": 900,
@@ -132,6 +132,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T11:44:26.340Z",
-  "stateRoot": "sha256:3caf0c06bd80bbdfaf401f41ba090c82550795c3488f79a0009c480fcccd7133"
+  "updatedAt": "2026-08-27T11:45:12.382Z",
+  "stateRoot": "sha256:dfdaa5716b3c62755e973a46d917a447887e0e2ced6be088d37221614dbf8b40"
 }
