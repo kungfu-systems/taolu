@@ -93,7 +93,11 @@ func Install(bundle compiler.Bundle, productID, platformID, root string) (Receip
 			_ = os.RemoveAll(staging)
 		}
 	}()
-	if err := archiveutil.Extract(cache, platform.Archive, staging, platform.StripComponents); err != nil {
+	if platform.Archive == "file" {
+		if err := archiveutil.ExtractFile(cache, staging, platform.Entrypoint); err != nil {
+			return Receipt{}, err
+		}
+	} else if err := archiveutil.Extract(cache, platform.Archive, staging, platform.StripComponents); err != nil {
 		return Receipt{}, err
 	}
 	entry := filepath.Join(staging, filepath.FromSlash(platform.Entrypoint))

@@ -32,6 +32,20 @@ func Extract(source, kind, destination string, strip int) error {
 	}
 }
 
+// ExtractFile gives raw release assets their declared entrypoint name instead
+// of leaking the content-addressed cache filename into the install tree.
+func ExtractFile(source, destination, entrypoint string) error {
+	rel, ok := safePath(entrypoint, 0)
+	if !ok || rel == "" {
+		return errors.New("unsafe file entrypoint")
+	}
+	target := filepath.Join(destination, rel)
+	if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
+		return err
+	}
+	return copyRegular(source, target, 0o755)
+}
+
 func safePath(name string, strip int) (string, bool) {
 	name = filepath.ToSlash(name)
 	if strings.HasPrefix(name, "/") {

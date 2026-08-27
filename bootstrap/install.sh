@@ -1,38 +1,32 @@
 #!/bin/bash
 # SPDX-License-Identifier: Apache-2.0
+# This file is packaged into each release with @TAOLU_VERSION@ replaced.
 set -eu
 
-: "${TAOLU_VERSION:?set TAOLU_VERSION to an exact released version}"
-: "${TAOLU_SHA256:?set TAOLU_SHA256 to the published binary digest}"
-: "${TAOLU_BUNDLE_URL:?set TAOLU_BUNDLE_URL to the site-owned bundle URL}"
-: "${TAOLU_BUNDLE_ROOT:?set TAOLU_BUNDLE_ROOT to the published sha256 bundle root}"
-: "${TAOLU_PRODUCT:?set TAOLU_PRODUCT to the site-owned product id}"
-
+version=${TAOLU_VERSION:-@TAOLU_VERSION@}
 case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) platform=linux-x64 ;;
   Linux-aarch64|Linux-arm64) platform=linux-arm64 ;;
   Darwin-arm64) platform=darwin-arm64 ;;
   Darwin-x86_64) platform=darwin-x64 ;;
-  *) echo "taolu bootstrap: unsupported platform" >&2; exit 1 ;;
+  *) echo "taolu installer: unsupported platform" >&2; exit 1 ;;
 esac
 
-root=${TAOLU_HOME:-"$HOME/.taolu"}
-cache="$root/bootstrap/$TAOLU_VERSION"
-binary="$cache/taolu"
-bundle="$cache/bundle.json"
-base_url=${TAOLU_RELEASE_BASE_URL:-"https://github.com/kungfu-systems/taolu/releases/download/v$TAOLU_VERSION"}
-mkdir -p "$cache"
+base_url=${TAOLU_RELEASE_BASE_URL:-"https://github.com/kungfu-systems/taolu/releases/download/v$version"}
+install_dir=${TAOLU_INSTALL_DIR:-"$HOME/.local/bin"}
+asset="taolu-$platform"
+tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/taolu-runtime.XXXXXX")
+trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
+mkdir -p "$install_dir"
 
-if [ -f "$binary" ]; then
-  actual=$(shasum -a 256 "$binary" | awk '{print $1}')
-  [ "$actual" = "$TAOLU_SHA256" ] || { echo "taolu bootstrap: cached runtime digest mismatch" >&2; exit 1; }
-else
-  curl --fail --location --proto '=https' --tlsv1.2 "$base_url/taolu-$platform" --output "$binary.tmp"
-  actual=$(shasum -a 256 "$binary.tmp" | awk '{print $1}')
-  [ "$actual" = "$TAOLU_SHA256" ] || { echo "taolu bootstrap: runtime digest mismatch" >&2; exit 1; }
-  chmod 0755 "$binary.tmp"
-  mv "$binary.tmp" "$binary"
-fi
-curl --fail --location --proto '=https' --tlsv1.2 "$TAOLU_BUNDLE_URL" --output "$bundle.tmp"
-mv "$bundle.tmp" "$bundle"
-exec "$binary" install --bundle "$bundle" --bundle-root "$TAOLU_BUNDLE_ROOT" --product "$TAOLU_PRODUCT" --platform "$platform" --root "$root"
+curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 "$base_url/$asset.sha256" --output "$tmp_dir/checksum"
+curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 "$base_url/$asset" --output "$tmp_dir/$asset"
+expected=$(awk -v asset="$asset" 'NF == 2 && $2 == asset { print $1 }' "$tmp_dir/checksum")
+[ ${#expected} -eq 64 ] || { echo "taolu installer: invalid checksum receipt" >&2; exit 1; }
+actual=$(shasum -a 256 "$tmp_dir/$asset" | awk '{print $1}')
+[ "$actual" = "$expected" ] || { echo "taolu installer: runtime digest mismatch" >&2; exit 1; }
+chmod 0755 "$tmp_dir/$asset"
+mv "$tmp_dir/$asset" "$install_dir/taolu"
+installed_version=$("$install_dir/taolu" version)
+[ "$installed_version" = "$version" ] || { echo "taolu installer: runtime version mismatch" >&2; exit 1; }
+echo "Taolu $version installed at $install_dir/taolu" >&2

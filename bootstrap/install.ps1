@@ -1,26 +1,24 @@
 # SPDX-License-Identifier: Apache-2.0
+# This file is packaged into each release with @TAOLU_VERSION@ replaced.
 $ErrorActionPreference = "Stop"
-foreach ($name in @("TAOLU_VERSION", "TAOLU_SHA256", "TAOLU_BUNDLE_URL", "TAOLU_BUNDLE_ROOT", "TAOLU_PRODUCT")) {
-  if (-not [Environment]::GetEnvironmentVariable($name)) { throw "Set $name to an exact site-owned value" }
-}
+$version = if ($env:TAOLU_VERSION) { $env:TAOLU_VERSION } else { "@TAOLU_VERSION@" }
 if (-not [Environment]::Is64BitOperatingSystem) { throw "Taolu requires a 64-bit operating system" }
 $platform = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") { "windows-arm64" } else { "windows-x64" }
-$root = if ($env:TAOLU_HOME) { $env:TAOLU_HOME } else { Join-Path $HOME ".taolu" }
-$cache = Join-Path $root "bootstrap/$env:TAOLU_VERSION"
-$binary = Join-Path $cache "taolu.exe"
-$bundle = Join-Path $cache "bundle.json"
-$baseUrl = if ($env:TAOLU_RELEASE_BASE_URL) { $env:TAOLU_RELEASE_BASE_URL } else { "https://github.com/kungfu-systems/taolu/releases/download/v$env:TAOLU_VERSION" }
-New-Item -ItemType Directory -Force -Path $cache | Out-Null
-if (Test-Path $binary) {
-  $actual = (Get-FileHash -Algorithm SHA256 $binary).Hash.ToLowerInvariant()
-  if ($actual -ne $env:TAOLU_SHA256.ToLowerInvariant()) { throw "Taolu cached runtime digest mismatch" }
-} else {
-  Invoke-WebRequest -UseBasicParsing -Uri "$baseUrl/taolu-$platform.exe" -OutFile "$binary.tmp"
-  $actual = (Get-FileHash -Algorithm SHA256 "$binary.tmp").Hash.ToLowerInvariant()
-  if ($actual -ne $env:TAOLU_SHA256.ToLowerInvariant()) { throw "Taolu runtime digest mismatch" }
-  Move-Item -Force "$binary.tmp" $binary
-}
-Invoke-WebRequest -UseBasicParsing -Uri $env:TAOLU_BUNDLE_URL -OutFile "$bundle.tmp"
-Move-Item -Force "$bundle.tmp" $bundle
-& $binary install --bundle $bundle --bundle-root $env:TAOLU_BUNDLE_ROOT --product $env:TAOLU_PRODUCT --platform $platform --root $root
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+$baseUrl = if ($env:TAOLU_RELEASE_BASE_URL) { $env:TAOLU_RELEASE_BASE_URL } else { "https://github.com/kungfu-systems/taolu/releases/download/v$version" }
+$installDir = if ($env:TAOLU_INSTALL_DIR) { $env:TAOLU_INSTALL_DIR } else { Join-Path $HOME ".local/bin" }
+$asset = "taolu-$platform.exe"
+$temp = Join-Path ([IO.Path]::GetTempPath()) ("taolu-runtime-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Force -Path $temp | Out-Null
+New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+try {
+  Invoke-WebRequest -UseBasicParsing -Uri "$baseUrl/$asset.sha256" -OutFile (Join-Path $temp "checksum")
+  Invoke-WebRequest -UseBasicParsing -Uri "$baseUrl/$asset" -OutFile (Join-Path $temp $asset)
+  $line = (Get-Content (Join-Path $temp "checksum") -Raw).Trim() -split '\s+'
+  if ($line.Count -ne 2 -or $line[1] -ne $asset -or $line[0] -notmatch '^[0-9a-fA-F]{64}$') { throw "Invalid Taolu checksum receipt" }
+  $actual = (Get-FileHash -Algorithm SHA256 (Join-Path $temp $asset)).Hash.ToLowerInvariant()
+  if ($actual -ne $line[0].ToLowerInvariant()) { throw "Taolu runtime digest mismatch" }
+  Move-Item -Force (Join-Path $temp $asset) (Join-Path $installDir "taolu.exe")
+  $installedVersion = & (Join-Path $installDir "taolu.exe") version
+  if ($installedVersion -ne $version) { throw "Taolu runtime version mismatch" }
+  Write-Host "Taolu $version installed at $(Join-Path $installDir 'taolu.exe')"
+} finally { Remove-Item -Recurse -Force $temp -ErrorAction SilentlyContinue }
