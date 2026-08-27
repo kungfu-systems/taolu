@@ -103,7 +103,7 @@ jobs:
       block-labels: blocked,do-not-merge,work-in-progress
       allowed-head-prefixes: feature/,fix/,chore/,docs/,ci/,refactor/
       landing-mode: direct
-      merge-method: rebase
+      merge-method: squash
       dry-run: false
     secrets:
       github-token: ${{ secrets.BUILDCHAIN_PROMOTION_TOKEN }}
