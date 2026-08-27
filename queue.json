@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 73,
+  "generation": 74,
   "fencingCounter": 10,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:68884770bf1beaebfb339811c0a0aa07e4fc4360b34bc8e6017881ee237396e4",
@@ -47,8 +47,13 @@
     "issuedAt": "2026-08-27T21:50:16.896Z",
     "expiresAt": "2026-08-27T22:51:40.749Z",
     "fencingToken": "sha256:4757526524908e96572c165a777b0afa2165017200d3eae44442aabde93cdf37",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-08-27T21:51:40.749Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-08-27T21:51:40.749Z",
+    "nativeProofRoot": "sha256:c7be43fa42af07b5d481c1a2ef87f3156234ce6c6d66d1926b4f314322262cab",
+    "nativeExecutionReceiptRoot": "sha256:ccd2095a20d5cc9b43c8da52d509195beb13438d7d2edd321e09d7adbb2a8d5b",
+    "nativeProofReuseRoot": "sha256:5105e3e30ae5c39a3701bf6a139b792dad7886772286335386f0a284d9f0f2bd",
+    "qualificationReceiptRoot": "sha256:8527ed7274b4ca8fa8a02c6064eab1b56ee718bf06cf38d5d414ed808a241b36",
+    "qualifiedAt": "2026-08-27T21:52:18.406Z"
   },
   "candidates": [
     {
@@ -559,10 +564,10 @@
       "sourceWorkflowRunId": 33118953137,
       "priority": "ordinary",
       "enqueuedAt": "2026-08-27T21:45:17.351Z",
-      "updatedAt": "2026-08-27T21:51:40.749Z",
+      "updatedAt": "2026-08-27T21:52:18.406Z",
       "attempts": 2,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         ".github/CODEOWNERS"
@@ -570,6 +575,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T21:51:40.749Z",
-  "stateRoot": "sha256:f6b18aad09f6ee833ab30539227c17355d32615c92b224166a826db42676f220"
+  "updatedAt": "2026-08-27T21:52:18.406Z",
+  "stateRoot": "sha256:d2e220a142f67adb640d7ee7f3145fb645f562d935ade1aaec1e5fd9edd71eeb"
 }
