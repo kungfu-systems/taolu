@@ -68,8 +68,8 @@ jobs:
     needs: alpha-dogfood-gate
     uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
     with:
-      buildchain-channel: stable
-      buildchain-ref: v4
+      buildchain-channel: ${{ inputs.channel == 'alpha' && 'alpha' || 'stable' }}
+      buildchain-ref: ${{ inputs.channel == 'alpha' && 'v4-alpha' || 'v4' }}
       buildchain-contract-lock-path: .buildchain/contract-lock.json
       buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
       buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
