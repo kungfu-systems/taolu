@@ -27,7 +27,11 @@ func fixture(t *testing.T, version string) (compiler.Bundle, string) {
 	b, _ := os.ReadFile(archive)
 	sum := sha256.Sum256(b)
 	digest := hex.EncodeToString(sum[:])
-	artifactURL := (&url.URL{Scheme: "file", Path: filepath.ToSlash(archive)}).String()
+	artifactPath := filepath.ToSlash(archive)
+	if filepath.VolumeName(archive) != "" {
+		artifactPath = "/" + artifactPath
+	}
+	artifactURL := (&url.URL{Scheme: "file", Path: artifactPath}).String()
 	bundle := compiler.Bundle{Schema: compiler.BundleSchema, TaoluVersion: "1.0.0", CatalogSHA256: digest, Products: []compiler.BundleProduct{{ID: "demo", Repository: "example/demo", ReleaseTag: "v" + version, ReleaseID: 1, Adapter: compiler.Adapter{Kind: "exact-asset", Version: 1}, Platforms: []compiler.BundlePlatform{{ID: "linux-x64", AssetID: 1, AssetName: "product.zip", URL: artifactURL, Size: int64(len(b)), SHA256: digest, Archive: "zip", StripComponents: 1, Entrypoint: "bin/tool"}}}}}
 	rooted := rootBundle(t, bundle)
 	return rooted, dir
