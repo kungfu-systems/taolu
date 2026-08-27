@@ -1,0 +1,22 @@
+{
+  "schema": "taolu.catalog/v1",
+  "taoluVersion": "1.0.0",
+  "products": [
+    {
+      "id": "kungfu",
+      "repository": "kungfu-systems/kungfu",
+      "releaseTag": "v4.0.0-alpha.3",
+      "adapter": { "kind": "exact-asset", "version": 1 },
+      "platforms": [
+        {
+          "id": "linux-x64",
+          "assetName": "kungfu-linux-x64.tar.gz",
+          "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+          "archive": "tar.gz",
+          "stripComponents": 1,
+          "entrypoint": "bin/kungfu"
+        }
+      ]
+    }
+  ]
+}

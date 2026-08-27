@@ -1,0 +1,10 @@
+.DS_Store
+.kungfu/
+.buildchain/artifacts/
+.buildchain/evidence/
+.buildchain/v4-*/
+.buildchain/*.receipt
+.buildchain/logs/
+dist/
+coverage.out
+*.tmp

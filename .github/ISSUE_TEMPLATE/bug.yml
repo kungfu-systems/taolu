@@ -1,0 +1,16 @@
+name: Bug report
+description: Report a reproducible Taolu defect without sensitive data
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Include Taolu version, platform, command, and sanitized output.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
