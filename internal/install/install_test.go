@@ -5,6 +5,7 @@ import (
 	"archive/zip"
 	"crypto/sha256"
 	"encoding/hex"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -26,7 +27,8 @@ func fixture(t *testing.T, version string) (compiler.Bundle, string) {
 	b, _ := os.ReadFile(archive)
 	sum := sha256.Sum256(b)
 	digest := hex.EncodeToString(sum[:])
-	bundle := compiler.Bundle{Schema: compiler.BundleSchema, TaoluVersion: "1.0.0", CatalogSHA256: digest, Products: []compiler.BundleProduct{{ID: "demo", Repository: "example/demo", ReleaseTag: "v" + version, ReleaseID: 1, Adapter: compiler.Adapter{Kind: "exact-asset", Version: 1}, Platforms: []compiler.BundlePlatform{{ID: "linux-x64", AssetID: 1, AssetName: "product.zip", URL: "file://" + archive, Size: int64(len(b)), SHA256: digest, Archive: "zip", StripComponents: 1, Entrypoint: "bin/tool"}}}}}
+	artifactURL := (&url.URL{Scheme: "file", Path: filepath.ToSlash(archive)}).String()
+	bundle := compiler.Bundle{Schema: compiler.BundleSchema, TaoluVersion: "1.0.0", CatalogSHA256: digest, Products: []compiler.BundleProduct{{ID: "demo", Repository: "example/demo", ReleaseTag: "v" + version, ReleaseID: 1, Adapter: compiler.Adapter{Kind: "exact-asset", Version: 1}, Platforms: []compiler.BundlePlatform{{ID: "linux-x64", AssetID: 1, AssetName: "product.zip", URL: artifactURL, Size: int64(len(b)), SHA256: digest, Archive: "zip", StripComponents: 1, Entrypoint: "bin/tool"}}}}}
 	rooted := rootBundle(t, bundle)
 	return rooted, dir
 }
@@ -34,8 +36,8 @@ func rootBundle(t *testing.T, b compiler.Bundle) compiler.Bundle {
 	t.Helper()
 	d := t.TempDir()
 	p := b.Products[0].Platforms[0]
-	cat := `{"schema":"taolu.catalog/v1","taoluVersion":"1.0.0","products":[{"id":"demo","repository":"example/demo","releaseTag":"` + b.Products[0].ReleaseTag + `","adapter":{"kind":"exact-asset","version":1},"platforms":[{"id":"linux-x64","assetName":"product.zip","sha256":"` + p.SHA256 + `","archive":"zip","stripComponents":1,"entrypoint":"bin/tool"}]}]}`
-	rel := `{"schema":"taolu.github-releases/v1","releases":[{"repository":"example/demo","tag":"` + b.Products[0].ReleaseTag + `","id":1,"assets":[{"id":1,"name":"product.zip","url":"` + p.URL + `","size":` + strconv.FormatInt(p.Size, 10) + `}]}]}`
+	cat := `{"schema":"taolu.catalog/v1","taoluVersion":"1.0.0","products":[{"id":"demo","repository":"example/demo","releaseTag":` + strconv.Quote(b.Products[0].ReleaseTag) + `,"adapter":{"kind":"exact-asset","version":1},"platforms":[{"id":"linux-x64","assetName":"product.zip","sha256":` + strconv.Quote(p.SHA256) + `,"archive":"zip","stripComponents":1,"entrypoint":"bin/tool"}]}]}`
+	rel := `{"schema":"taolu.github-releases/v1","releases":[{"repository":"example/demo","tag":` + strconv.Quote(b.Products[0].ReleaseTag) + `,"id":1,"assets":[{"id":1,"name":"product.zip","url":` + strconv.Quote(p.URL) + `,"size":` + strconv.FormatInt(p.Size, 10) + `}]}]}`
 	_ = os.WriteFile(filepath.Join(d, "c.json"), []byte(cat), 0o644)
 	_ = os.WriteFile(filepath.Join(d, "r.json"), []byte(rel), 0o644)
 	out, err := compiler.Compile(filepath.Join(d, "c.json"), filepath.Join(d, "r.json"))
