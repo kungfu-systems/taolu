@@ -1,0 +1,37 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [dev/v1/v1.0]
+
+permissions:
+  contents: read
+
+jobs:
+  stage-capsule:
+    uses: kungfu-systems/buildchain/.github/workflows/v4-stage-capsule-canary.yml@v4-alpha
+    with:
+      consumer: taolu
+      node-version: "24"
+      go-version: "1.25.x"
+      install-artifact-path: .buildchain/install.receipt
+      build-artifact-path: .buildchain/build.receipt
+      verify-artifact-path: .buildchain/verify.receipt
+
+  build:
+    uses: kungfu-systems/buildchain/.github/workflows/build.yml@v4-alpha
+    with:
+      buildchain-channel: alpha
+      runner-preset: custom
+      platforms-json: >-
+        [{"id":"darwin-arm64","name":"Darwin ARM64","runner":"[\"ubuntu-24.04\"]","githubHosted":true},{"id":"darwin-x64","name":"Darwin x64","runner":"[\"ubuntu-24.04\"]","githubHosted":true},{"id":"linux-arm64","name":"Linux ARM64","runner":"[\"ubuntu-24.04\"]","githubHosted":true},{"id":"linux-x64","name":"Linux x64","runner":"[\"ubuntu-24.04\"]","githubHosted":true},{"id":"windows-arm64","name":"Windows ARM64","runner":"[\"ubuntu-24.04\"]","githubHosted":true},{"id":"windows-x64","name":"Windows x64","runner":"[\"ubuntu-24.04\"]","githubHosted":true}]
+      setup-node: false
+      require-install: true
+      require-build: true
+      require-verify: true
+      artifact-name: taolu
+      artifact-paths: |
+        dist
+        .buildchain/*.receipt
+      release-candidate: true

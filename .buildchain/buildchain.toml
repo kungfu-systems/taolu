@@ -1,0 +1,52 @@
+schema = 1
+
+[version]
+required = true
+
+[[version.files]]
+type = "json"
+path = "package.json"
+key = "version"
+
+[[version.files]]
+type = "json"
+path = "internal/product/version.json"
+key = "version"
+
+[lifecycle.install]
+command = "mkdir -p .buildchain && go env GOVERSION > .buildchain/install.receipt"
+
+[lifecycle.build]
+command = "go run ./cmd/build"
+
+[lifecycle.verify]
+commands = [
+  "go test ./...",
+  "go vet ./...",
+  "bash -n bootstrap/install.sh",
+  "go run ./cmd/taolu version > .buildchain/verify.receipt",
+]
+
+[[facts.version_sources]]
+id = "product"
+type = "json"
+path = "package.json"
+key = "version"
+
+[[facts.modules]]
+id = "taolu-runtime"
+root = "."
+scope = "native-cli"
+version_source = "product"
+lifecycle = "build"
+outputs = [".buildchain/build.receipt"]
+
+[[facts.products]]
+id = "taolu"
+module_facts = [".buildchain/facts/taolu-runtime.json"]
+artifacts = ["dist"]
+
+[badges]
+release_passport = "https://github.com/kungfu-systems/taolu/releases/latest/download/taolu.release.json"
+platforms = ["macOS", "Linux", "Windows"]
+workflows = ["verify.yml", "release.yml"]

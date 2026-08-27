@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Buildchain publication channel
+        required: true
+        default: release
+        type: choice
+        options:
+          - alpha
+          - release
+      target-ref:
+        description: Protected channel ref to promote
+        required: true
+        default: release/v1/v1.0
+        type: string
+      target-sha:
+        description: Exact reviewed release-candidate SHA
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  promote:
+    uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
+    with:
+      buildchain-channel: stable
+      buildchain-contract-lock-path: .buildchain/contract-lock.json
+      buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
+      buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
+      allow-repository: kungfu-systems/taolu
+      channel: ${{ inputs.channel }}
+      target-ref: ${{ inputs.target-ref }}
+      target-sha: ${{ inputs.target-sha }}
+      package-manager: custom
+      artifact-name: taolu
+      release-candidate-workflow-file: verify.yml
+      release-candidate-workflow-name: Verify
+      artifact-patterns: |
+        taolu-*
+      publish-target: github-release
+      github-release: true
+      declarative-release-tail: true
+      github-release-title: Taolu ${{ inputs.channel }}
+      github-release-payload-patterns: |
+        taolu-*
+      publish-artifact-kind: binary
+      release-passport: true
+      release-passport-product-name: Taolu
+      publication-auto-admission: true
+      publication-auto-no-gate: true
+      publication-publisher-workflow-path: .github/workflows/release.yml
+      publication-product: Taolu
+      publication-target: github-release:kungfu-systems/taolu
+      publication-package-name: kungfu-systems/taolu
+      runner-preset: github-hosted
+      trusted-publishing: false
+      dry-run: false
+    secrets: inherit

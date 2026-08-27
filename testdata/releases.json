@@ -1,0 +1,18 @@
+{
+  "schema": "taolu.github-releases/v1",
+  "releases": [
+    {
+      "repository": "kungfu-systems/kungfu",
+      "tag": "v4.0.0-alpha.3",
+      "id": 1001,
+      "assets": [
+        {
+          "id": 2001,
+          "name": "kungfu-linux-x64.tar.gz",
+          "url": "https://github.com/kungfu-systems/kungfu/releases/download/v4.0.0-alpha.3/kungfu-linux-x64.tar.gz",
+          "size": 123456
+        }
+      ]
+    }
+  ]
+}
