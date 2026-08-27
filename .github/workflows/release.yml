@@ -97,6 +97,7 @@ jobs:
       publication-publisher-workflow-path: .github/workflows/release.yml
       publication-product: Taolu
       publication-target: github-release:kungfu-systems/taolu
+      publication-package-name: ""
       runner-preset: github-hosted
       trusted-publishing: false
       dry-run: false
