@@ -71,14 +71,12 @@ jobs:
   promote-alpha:
     needs: alpha-dogfood-gate
     if: ${{ inputs.channel == 'alpha' }}
-    # Alpha bootstrap is pinned to the reviewed Buildchain v4 Alpha shell while
-    # the public v4 router still calls its older immutable bootstrap shell.
-    uses: kungfu-systems/buildchain/.github/workflows/.release-candidate-promote.yml@2b7d25bffcfb5b86e3fcc5477f8ab25c991a8261
+    uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4-alpha
     with:
-      buildchain-ref: ${{ inputs.buildchain-ref || '2b7d25bffcfb5b86e3fcc5477f8ab25c991a8261' }}
-      buildchain-expected-channel: alpha
-      buildchain-expected-major: "4"
+      buildchain-channel: alpha
+      buildchain-ref: ${{ inputs.buildchain-ref || 'v4-alpha' }}
       buildchain-contract-lock-path: .buildchain/alpha-contract-lock.json
+      buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
       allow-repository: kungfu-systems/taolu
       channel: alpha
       target-ref: ${{ inputs.target-ref }}
