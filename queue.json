@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 87,
+  "generation": 88,
   "fencingCounter": 12,
   "policy": {
     "agingSeconds": 900,
@@ -11,51 +11,7 @@
     "leaseSeconds": 3600,
     "emergencyPolicy": "reviewed-explicit-only"
   },
-  "activeWarrant": {
-    "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "qualified",
-    "repository": "kungfu-systems/taolu",
-    "protectedBase": "dev/v1/v1.0",
-    "candidateId": "sha256:406182c1d36f6d09ec1ed2c856385e06fdfedc444d5fcb65ac6f7735a9a1e253",
-    "pullRequestNumber": 28,
-    "sourceHead": "06ab8826e382beb1a5045d9fa2d19b3580b82a50",
-    "assignmentRoot": "sha256:41f591884de300bdd0f0066592b6b55dd1450dfbdff9d7b11efcc608a6562048",
-    "initiativeRoot": "sha256:dea3c67cd9b2b6209e5f8b2655472b0a432be061a5df1ce767df2feaffe6cdcf",
-    "sourceIdentityRoot": "sha256:7f0f8675121ba2ab022447baa61b8d79874767851ec3f32b41a386469631d86d",
-    "sourcePatchRoot": "sha256:33a95f01b950c51f9aa2bf229735aa5783b3a73acf5b1125e8dfa7b9322904fc",
-    "sourceProofRoot": "sha256:a0562de42da7af2c8cc9f7249499f181625db4824aa4c76a6c0c92eb9f28b187",
-    "planRoot": "sha256:6019522780cd62562d631436eb34ed606502142fd2d35a0de2f151bf05b0e9c1",
-    "closureRoot": "sha256:71a3b5cc78b3abda0dbb88c00825fcc3316c83a3a7a985319a3a38c149c84bde",
-    "dependencyRoot": "sha256:390030390d7639caa881a344a2090abb66371d85e93855275406167e8527d6e0",
-    "toolchainRoot": "sha256:2499de9991be21bb0e8326d72a87864e0e5ed8e65dc9533004ffa2b74f491b8a",
-    "environmentRoot": "sha256:f78260124d5310923632adf21f149eef92e9e4e4c0febac5c0e0c4d2f22fa6bf",
-    "nativeCommandContract": {
-      "schema": "kungfu.buildchain.native-command-contract/v1",
-      "runner": "bash-lc",
-      "command": "go test -race ./... && go vet ./...",
-      "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
-    },
-    "affectedPaths": [
-      ".buildchain/alpha-contract-lock.json",
-      ".github/workflows/release.yml"
-    ],
-    "shardEvidenceRoots": [],
-    "sourceWorkflowRunId": 33182819298,
-    "deliveryClass": "native-proof-required",
-    "priority": "ordinary",
-    "generation": 12,
-    "expectedOldStateRoot": "sha256:e8f1b30a3d4ca7d8c28ca713e58bacb27ccd9e7e4c8905d7cf8e140647addd44",
-    "issuedAt": "2026-08-28T15:09:42.753Z",
-    "expiresAt": "2026-08-28T16:10:51.993Z",
-    "fencingToken": "sha256:918954aafe4abb2409f3bf3f57135db5fb88c3a4d2a1f704e0718d3eca5ee59d",
-    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
-    "heartbeatAt": "2026-08-28T15:10:51.993Z",
-    "nativeProofRoot": "sha256:5808fa5fc426c3b2c2f52c1424d6f885e84cb0da043f8a2653f1b76f4c546f3b",
-    "nativeExecutionReceiptRoot": "sha256:530a79197a96a5f73ed50b178edd85c5ca9138093920114311bfcd19bc847dac",
-    "nativeProofReuseRoot": "sha256:845af64ad107cf18132f5efd4ca3419aa1db1dcaac2de9fdbda292c16b5a9c3f",
-    "qualificationReceiptRoot": "sha256:5ad2c2245dac48301aa35a9275f27871a9f449889601415800ff5ac2d299bcd8",
-    "qualifiedAt": "2026-08-28T15:11:16.297Z"
-  },
+  "activeWarrant": null,
   "candidates": [
     {
       "repository": "kungfu-systems/taolu",
@@ -663,11 +619,19 @@
       "sourceWorkflowRunId": 33182819298,
       "priority": "ordinary",
       "enqueuedAt": "2026-08-28T15:09:39.816Z",
-      "updatedAt": "2026-08-28T15:11:16.297Z",
+      "updatedAt": "2026-08-28T15:13:06.680Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "qualified",
-      "terminal": null,
+      "status": "merged",
+      "terminal": {
+        "outcome": "merged",
+        "reason": "Protected merge read back at exact commit 6dcccdc3bd2c8b1801c7f6decea08ae7877aac2b",
+        "evidenceRoot": "sha256:c33bcc2a4cd74686acc5d89f1d1dff0fcde40b681b224f7feea851369067e582",
+        "closedAt": "2026-08-28T15:13:06.680Z",
+        "fencingToken": "sha256:918954aafe4abb2409f3bf3f57135db5fb88c3a4d2a1f704e0718d3eca5ee59d",
+        "leaseGeneration": 12,
+        "successorWake": null
+      },
       "affectedPaths": [
         ".buildchain/alpha-contract-lock.json",
         ".github/workflows/release.yml"
@@ -675,6 +639,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-28T15:11:16.297Z",
-  "stateRoot": "sha256:420e18c8bac1ef52bebb986839762073409a180cdbceb79cbd27551d8c55e847"
+  "updatedAt": "2026-08-28T15:13:06.680Z",
+  "stateRoot": "sha256:5a65558ce7135a8e191e79103498af0d9055489519e060a7bea30b00131fb7a6"
 }
