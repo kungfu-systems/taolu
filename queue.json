@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 80,
+  "generation": 81,
   "fencingCounter": 11,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:e2341b20b0de58e73438dd1b85d08c4448feb6accd357d90e54dcd1d2dc2f768",
@@ -58,8 +58,13 @@
     "issuedAt": "2026-08-28T06:00:56.058Z",
     "expiresAt": "2026-08-28T07:02:23.118Z",
     "fencingToken": "sha256:ad99a29d00702291a8002288cef40d4152c370ae26852a8273e76c737724a580",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-08-28T06:02:23.118Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-08-28T06:02:23.118Z",
+    "nativeProofRoot": "sha256:f47b9dc15599f36f0a114157555a8d0fa439ee350d2ebc5dee375c07f5313d4a",
+    "nativeExecutionReceiptRoot": "sha256:60ccb4b4fa2bcd95ba8e443ff888afdc37c000cd549398cc47faf88e0110274b",
+    "nativeProofReuseRoot": "sha256:1a2f157c8afd75a982c2e7419665d62037a8394889ddd3e71466e59f77f553cb",
+    "qualificationReceiptRoot": "sha256:7c363f73bd595e8421482db8bc10e6781e672b5d019b338c5743427dc51bba5c",
+    "qualifiedAt": "2026-08-28T06:02:43.749Z"
   },
   "candidates": [
     {
@@ -613,10 +618,10 @@
       "sourceWorkflowRunId": 33145951989,
       "priority": "ordinary",
       "enqueuedAt": "2026-08-28T06:00:52.498Z",
-      "updatedAt": "2026-08-28T06:02:23.118Z",
+      "updatedAt": "2026-08-28T06:02:43.749Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         "README.md",
@@ -635,6 +640,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-28T06:02:23.118Z",
-  "stateRoot": "sha256:dda61552fdc6133d8a949ce2c2bee6671e0a2b8c959c7eae5644ee1da09c1485"
+  "updatedAt": "2026-08-28T06:02:43.749Z",
+  "stateRoot": "sha256:29cb6f576fbe2fbe4b0ea68d49c08b523a93745438b74fbbdf224e18bb0cdca1"
 }
