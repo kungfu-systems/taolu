@@ -6,12 +6,13 @@ Product repositories do not depend on Taolu. They keep publishing their own rele
 
 ## What 1.0 provides
 
-- Deterministic `taolu.catalog/v1` + pinned GitHub Release metadata compilation.
+- Deterministic `taolu.catalog/v1` + pinned GitHub Release metadata compilation for one or many products and append-only exact versions.
 - A rooted `taolu.bundle/v1` binding release ID, asset ID, URL, digest, platform, extraction contract, and runtime compatibility.
-- A finite `exact-asset/v1` adapter; no catalog-provided executable hooks.
+- A finite `exact-asset/v1` adapter with optional checksum-pinned provenance/publication evidence and extracted-entrypoint verification; no catalog-provided executable hooks.
 - HTTPS/file download, resumable partial HTTPS downloads, content-addressed cache, SHA-256 verification, traversal/symlink-safe ZIP and tar.gz extraction, owned install roots, staged activation, current/previous state, rollback, status, and JSON receipts.
 - Checksummed `curl | sh` and PowerShell bootstraps that install the released Taolu CLI with no sudo, shell-profile edit, or implicit PATH mutation.
-- `taolu installer`, which turns one Site-owned product configuration and pinned GitHub Release snapshot into a rooted `bundle.json`, `install.sh`, and `install.ps1`.
+- Product/default-version selection, `all` installation, configurable owned launchers, dry-run, status, and rollback on POSIX and Windows.
+- `taolu installer`, which turns one Site-owned catalog and pinned GitHub Release snapshot into a rooted `bundle.json`, `install.sh`, and `install.ps1`.
 - Buildchain v4 as the sole build, verification, evidence, and release control plane.
 
 Release publication is a promote-only transaction over the PR-stage candidate.
@@ -23,7 +24,7 @@ state. Taolu does not own a release-side shell publisher.
 
 ```bash
 # Use an exact alpha or stable Release URL in production.
-curl -fsSL https://github.com/kungfu-systems/taolu/releases/download/v1.0.0/taolu-install.sh | sh
+curl -fsSL https://github.com/kungfu-systems/taolu/releases/download/v1.0.0-alpha.1/taolu-install.sh | sh
 
 taolu installer \
   --config testdata/catalog.json \
@@ -38,12 +39,12 @@ The command emits the complete Site publication unit. A product repository does 
 
 Taolu releases are dogfooded in order. An alpha release must first pass public-URL self-consumption on macOS ARM64, Linux x64, and Windows x64. The tested released binary generates and executes Taolu's own product installer. Stable publication is fail-closed unless that exact alpha evidence is supplied to the Buildchain-controlled release gate.
 
-The examples under `examples/` show how the current single-product Kungfu Site and multi-product libkungfu.dev Site shapes map to Site-owned catalogs. Placeholder digests must be replaced by official release digests before compilation.
+The examples under `examples/` project the current single-product Kungfu Site and four-product libkungfu.dev release shapes, including exact tags, supported platforms, release evidence, entrypoint digests where upstream publishes them, default versions, and Windows targets.
 
 Read [the architecture](docs/architecture.md) and [Site adoption contract](docs/adoption.md) before integrating it. Taolu 1.0 does not migrate either live Site repository; it provides the independent contract needed for that later Site-only change.
 
 ## Trust boundary
 
-Taolu consumes exact public release facts. It does not create product tags, mutate product releases, infer missing checksums, run remote hooks, overwrite foreign install roots, or bypass platform and archive validation. The GitHub source repository is not itself a distribution channel; use the checksummed assets from a protected Taolu release.
+Taolu consumes exact public release facts. It does not create product tags, mutate product releases, infer missing checksums, run remote hooks, overwrite foreign install roots or launchers, or bypass platform and archive validation. The GitHub source repository is not itself a distribution channel; use the checksummed assets from a protected Taolu release.
 
 Licensed under Apache-2.0.

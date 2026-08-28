@@ -1,24 +1,79 @@
 {
   "schema": "taolu.catalog/v1",
   "taoluVersion": "1.0.0",
+  "defaultProduct": "kungfu",
   "products": [
     {
-      "id": "kungfu",
-      "repository": "kungfu-systems/kungfu",
-      "releaseTag": "v4.0.0-alpha.3",
+      "id": "kfd",
+      "command": "kfd",
+      "repository": "kungfu-systems/kfd",
+      "defaultVersion": "1.0.0-alpha.65",
       "adapter": { "kind": "exact-asset", "version": 1 },
-      "platforms": [
-        { "id": "linux-x64", "assetName": "kungfu-linux-x64.tar.gz", "sha256": "REPLACE_WITH_RELEASE_SHA256", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "bin/kungfu" }
-      ]
+      "versions": [{
+        "version": "1.0.0-alpha.65",
+        "releaseTag": "v1.0.0-alpha.65",
+        "sourceSha": "790992240985794e5f528d7b415c13de213e9556",
+        "platforms": [
+          { "id": "darwin-arm64", "assetName": "kfd-1.0.0-alpha.65-aarch64-apple-darwin.tar.gz", "sha256": "edbd833435c56c6ff0a16b73806677e2179936228e94bc53651d193c7066f2aa", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kfd", "entrypointSha256": "831b915ed889e5a7789813e1c2f805a83a58fbe7187868f23505751b63edac4e", "evidence": [{ "kind": "provenance", "assetName": "kfd-1.0.0-alpha.65-aarch64-apple-darwin.provenance.json", "sha256": "050caa4c3f2df33f5ce35cc309103237df64c98ff616822285b8b3793a733a5d" }] },
+          { "id": "darwin-x64", "assetName": "kfd-1.0.0-alpha.65-x86_64-apple-darwin.tar.gz", "sha256": "e0d7d07d38b18a1bf091558d410e78fe3adcc3c5158216a4685b2717d882f6f3", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kfd", "entrypointSha256": "1e56b4c93766284727666c7dc61b58489e3dce6336ae2e0d6e9a6d7c36070c5b", "evidence": [{ "kind": "provenance", "assetName": "kfd-1.0.0-alpha.65-x86_64-apple-darwin.provenance.json", "sha256": "719139129d9d80033f500aab9cd6cdc37ec3cc57c93c82d22b92de33911e8908" }] },
+          { "id": "linux-arm64", "assetName": "kfd-1.0.0-alpha.65-aarch64-unknown-linux-gnu.tar.gz", "sha256": "5bae00053feb2adb3c2b4f121e8274f47d2af359fa43ddd1b374248b14242ced", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kfd", "entrypointSha256": "da773e219c34683819c091fcea44a358502f4c4a715e491ec0d5e227a174e02f", "evidence": [{ "kind": "provenance", "assetName": "kfd-1.0.0-alpha.65-aarch64-unknown-linux-gnu.provenance.json", "sha256": "86baf68a79cc15181c57e4bfcb9374f4a492d07b6cd393434d8ddb38f3bc407b" }] },
+          { "id": "linux-x64", "assetName": "kfd-1.0.0-alpha.65-x86_64-unknown-linux-gnu.tar.gz", "sha256": "8d1f419e1e0c3c93b80238beb0ac67718775a3aac532d2aa464a841b1e94937f", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kfd", "entrypointSha256": "a1a8933f4b577aa061e697b37c85bf5697746d1cfc639f068fdedc60e3ad7ed4", "evidence": [{ "kind": "provenance", "assetName": "kfd-1.0.0-alpha.65-x86_64-unknown-linux-gnu.provenance.json", "sha256": "4e0ada3dc6f48631841d903981964f45920a2b6c0c07f1110e96856f264c7cb7" }] },
+          { "id": "windows-x64", "assetName": "kfd-1.0.0-alpha.65-x86_64-pc-windows-msvc.zip", "sha256": "78a691ba7cf0d7f6aac125ed4b2d101334a0959d5d2a79b0719b7c8f76328009", "archive": "zip", "stripComponents": 1, "entrypoint": "kfd.exe", "entrypointSha256": "cc6dbce3c926a531e168ddd466fc6aff4485d3cff644075a6d189b75fe8f9f35", "evidence": [{ "kind": "provenance", "assetName": "kfd-1.0.0-alpha.65-x86_64-pc-windows-msvc.provenance.json", "sha256": "213ddf678d0cec4113011fe7a3db9750c20b8cb9dde9610e6c6a2625b554967c" }] }
+        ]
+      }]
     },
     {
-      "id": "kfc",
-      "repository": "kungfu-systems/kfc",
-      "releaseTag": "v1.0.0",
+      "id": "buildchain",
+      "command": "buildchain",
+      "repository": "kungfu-systems/buildchain",
+      "defaultVersion": "4.0.0",
       "adapter": { "kind": "exact-asset", "version": 1 },
-      "platforms": [
-        { "id": "linux-x64", "assetName": "kfc-linux-x64.tar.gz", "sha256": "REPLACE_WITH_RELEASE_SHA256", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "bin/kfc" }
-      ]
+      "versions": [{
+        "version": "4.0.0", "releaseTag": "v4.0.0", "sourceSha": "45a49dcaa0fcef59bc66481a85c39514d08972cc",
+        "platforms": [
+          { "id": "darwin-arm64", "assetName": "buildchain-aarch64-apple-darwin.tar.gz", "sha256": "ad18019518fc4d6fca30120c9532eb2dc945f0f502c8d7f37cb3bd747f703657", "archive": "tar.gz", "stripComponents": 0, "entrypoint": "buildchain", "entrypointSha256": "f3049a26b0cfe7dd8d4b3a88c31888ab8bcf6b00cbf801bb0523e1a7483128fb", "evidence": [{ "kind": "provenance", "assetName": "buildchain-aarch64-apple-darwin.json", "sha256": "2317e9f18d01c7625e91182a9f114fd6c89713879a2ac89849648cd5282a1ae4" }] },
+          { "id": "linux-x64", "assetName": "buildchain-x86_64-unknown-linux-gnu.tar.gz", "sha256": "23ffa5167c035799ff3e70e9d7217b8f4e750ec654f8d8f2bc2d2f109f066737", "archive": "tar.gz", "stripComponents": 0, "entrypoint": "buildchain", "entrypointSha256": "4df5ce9c7a9cb9b9420c0d9288e50f93ed3092376d24db92aa7e45817b14f953", "evidence": [{ "kind": "provenance", "assetName": "buildchain-x86_64-unknown-linux-gnu.json", "sha256": "9a500847b25794a2ac20bb2ae0b1f4972204075345d0101b4eaa8018cbeedde1" }] },
+          { "id": "windows-x64", "assetName": "buildchain-x86_64-pc-windows-msvc.zip", "sha256": "dc247d841c9438ed7a0366e64136367c16f71c533cde4a8f195ffe28375f8373", "archive": "zip", "stripComponents": 0, "entrypoint": "buildchain.exe", "entrypointSha256": "649c22793147bb371269e1c7bf235f23d776e8e56c0b566cef9f0dcc9809d84a", "evidence": [{ "kind": "provenance", "assetName": "buildchain-x86_64-pc-windows-msvc.json", "sha256": "ee9a5dd03129efa3e73b1b013ef2af5b8fb746f42a2bf65292099bd1fea9c347" }] }
+        ]
+      }, {
+        "version": "3.0.6", "releaseTag": "v3.0.6", "sourceSha": "4d3415855debb03bac01c4f5d11417f0d1ea42d8",
+        "platforms": [
+          { "id": "darwin-arm64", "assetName": "buildchain-aarch64-apple-darwin.tar.gz", "sha256": "26d196427eb201856efab9a0a44c5fd4f6f831715253dfbf638821dda89e60e1", "archive": "tar.gz", "stripComponents": 0, "entrypoint": "buildchain", "entrypointSha256": "fa6580659f5abccfa43679c23a6f5f3e3b6a89c6710e8a380c84f08087e09368", "evidence": [{ "kind": "provenance", "assetName": "buildchain-aarch64-apple-darwin.json", "sha256": "ea935369bb931ee0ddd8fc37d299c969899079fe9a476847e98256d5152498e5" }] },
+          { "id": "linux-x64", "assetName": "buildchain-x86_64-unknown-linux-gnu.tar.gz", "sha256": "809916e805d5918ad8e8138285bf2bad653332bc96a1cc2bb83f854d69bd2bda", "archive": "tar.gz", "stripComponents": 0, "entrypoint": "buildchain", "entrypointSha256": "d3065e4cddac162d9d74f705942feba6536dfb00ee37b8d74fbbeedce0efab03", "evidence": [{ "kind": "provenance", "assetName": "buildchain-x86_64-unknown-linux-gnu.json", "sha256": "f18d64f78e7237206761d78ce7515ea8f490f61d79bcfb5b43785bcaa425806f" }] },
+          { "id": "windows-x64", "assetName": "buildchain-x86_64-pc-windows-msvc.zip", "sha256": "c4bd2877fe8ec31729e32dda1d8bde5bf73536458d25a77b7d97e0f191713690", "archive": "zip", "stripComponents": 0, "entrypoint": "buildchain.exe", "entrypointSha256": "bcd64ca51a6cd37fa7aa17d55710f97f84177d0f262d338cc1b0ccaf9c2632b8", "evidence": [{ "kind": "provenance", "assetName": "buildchain-x86_64-pc-windows-msvc.json", "sha256": "46dceb99c6df0242bf40dc97f4ea964813b8b4af5a8700b2905d8c64298c4d0c" }] }
+        ]
+      }]
+    },
+    {
+      "id": "kungfu",
+      "command": "kungfu",
+      "repository": "kungfu-systems/kungfu",
+      "defaultVersion": "4.0.0-alpha.3",
+      "adapter": { "kind": "exact-asset", "version": 1 },
+      "versions": [{
+        "version": "4.0.0-alpha.3", "releaseTag": "v4.0.0-alpha.3", "sourceSha": "6d99af738b78eccb48885a5fd59b88a0e5e4900a",
+        "platforms": [
+          { "id": "darwin-arm64", "assetName": "kungfu-episodes-cli-darwin-arm64.tar.gz", "sha256": "be64a25a8756e03dfd1c3b59374dac781cd50eea645ed09a691c398de42403af", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kungfu", "evidence": [{ "kind": "publication", "assetName": "kungfu-installer-publication-bundle.json", "sha256": "1bafe5fbcd50118490712d591ac5baa19bdd0e1ceaff71573450a2104eb6c136" }] },
+          { "id": "linux-arm64", "assetName": "kungfu-episodes-cli-linux-arm64.tar.gz", "sha256": "15addf6285a236ec5b0088fd7373dbc4a4e0fdeb748271f7b95c54834c48ca4d", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kungfu", "evidence": [{ "kind": "publication", "assetName": "kungfu-installer-publication-bundle.json", "sha256": "1bafe5fbcd50118490712d591ac5baa19bdd0e1ceaff71573450a2104eb6c136" }] },
+          { "id": "linux-x64", "assetName": "kungfu-episodes-cli-linux-x64.tar.gz", "sha256": "c7ede1fc9692a25a6ebefd32cac75e9fcaa5c7717d3568a599695ebc63239d49", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "kungfu", "evidence": [{ "kind": "publication", "assetName": "kungfu-installer-publication-bundle.json", "sha256": "1bafe5fbcd50118490712d591ac5baa19bdd0e1ceaff71573450a2104eb6c136" }] },
+          { "id": "windows-x64", "assetName": "kungfu-episodes-cli-windows-x64.zip", "sha256": "ca467459a9b1e6b89b3cd1fd6c460807cba983e2368c85001537c51529de703b", "archive": "zip", "stripComponents": 1, "entrypoint": "kungfu.cmd", "evidence": [{ "kind": "publication", "assetName": "kungfu-installer-publication-bundle.json", "sha256": "1bafe5fbcd50118490712d591ac5baa19bdd0e1ceaff71573450a2104eb6c136" }] }
+        ]
+      }]
+    },
+    {
+      "id": "agent-hub-demo",
+      "command": "agent-hub-demo",
+      "repository": "kungfu-systems/agent-hub-demo",
+      "defaultVersion": "0.2.0",
+      "adapter": { "kind": "exact-asset", "version": 1 },
+      "versions": [{
+        "version": "0.2.0", "releaseTag": "v0.2.0", "sourceSha": "f186be657943bce7c7e29c80b7ae77dcd48961c6",
+        "platforms": [
+          { "id": "darwin-arm64", "assetName": "agent-hub-demo-macos-arm64", "sha256": "00880396be470e77f3814d010803133b87c974fa6ffe8f1e7834724fcebafafd", "archive": "file", "stripComponents": 0, "entrypoint": "agent-hub-demo", "entrypointSha256": "00880396be470e77f3814d010803133b87c974fa6ffe8f1e7834724fcebafafd", "evidence": [{ "kind": "provenance", "assetName": "binary-macos-arm64.json", "sha256": "765b25cc1cd19d1fc5830f75864fe38217595ca33a0e008313a156c9f00b0db0" }] },
+          { "id": "linux-x64", "assetName": "agent-hub-demo-linux-x64", "sha256": "2ecffae244485971ccbfa347a3b34794a5cc5c9199a3814d13d237688124a75f", "archive": "file", "stripComponents": 0, "entrypoint": "agent-hub-demo", "entrypointSha256": "2ecffae244485971ccbfa347a3b34794a5cc5c9199a3814d13d237688124a75f", "evidence": [{ "kind": "provenance", "assetName": "binary-linux-x64.json", "sha256": "68655c0ded2c897c1aa2634202f6c7da40846974a3fbec66ea797c83b2d67d1a" }] },
+          { "id": "windows-x64", "assetName": "agent-hub-demo-windows-x64.exe", "sha256": "aa1b733a5e561c6573cc2f051683de2bb8269867bbc208d913f7b04c636f4519", "archive": "file", "stripComponents": 0, "entrypoint": "agent-hub-demo.exe", "entrypointSha256": "aa1b733a5e561c6573cc2f051683de2bb8269867bbc208d913f7b04c636f4519", "evidence": [{ "kind": "provenance", "assetName": "binary-windows-x64.json", "sha256": "6353514730f1fa4829f264eae7048a30ec30f16cb1d0e3a2d08aac3a4dd6383a" }] }
+        ]
+      }]
     }
   ]
 }
