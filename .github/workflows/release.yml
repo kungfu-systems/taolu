@@ -27,6 +27,7 @@ on:
 
 permissions:
   actions: write
+  artifact-metadata: write
   attestations: write
   checks: write
   contents: write
@@ -67,7 +68,8 @@ jobs:
     needs: alpha-dogfood-gate
     uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
     with:
-      buildchain-channel: stable
+      buildchain-channel: ${{ inputs.channel == 'alpha' && 'alpha' || 'stable' }}
+      buildchain-ref: ${{ inputs.channel == 'alpha' && 'v4-alpha' || 'v4' }}
       buildchain-contract-lock-path: .buildchain/contract-lock.json
       buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
       buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
@@ -95,7 +97,7 @@ jobs:
       publication-publisher-workflow-path: .github/workflows/release.yml
       publication-product: Taolu
       publication-target: github-release:kungfu-systems/taolu
-      publication-package-name: kungfu-systems/taolu
+      publication-package-name: ""
       runner-preset: github-hosted
       trusted-publishing: false
       dry-run: false
