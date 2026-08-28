@@ -68,17 +68,17 @@ jobs:
             exit 1
           }
 
-  promote:
+  promote-alpha:
     needs: alpha-dogfood-gate
-    uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
+    if: ${{ inputs.channel == 'alpha' }}
+    uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4-alpha
     with:
-      buildchain-channel: ${{ inputs.channel == 'alpha' && 'alpha' || 'stable' }}
-      buildchain-ref: ${{ inputs.buildchain-ref || (inputs.channel == 'alpha' && 'v4-alpha' || 'v4') }}
-      buildchain-contract-lock-path: .buildchain/contract-lock.json
-      buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
+      buildchain-channel: alpha
+      buildchain-ref: ${{ inputs.buildchain-ref || 'v4-alpha' }}
+      buildchain-contract-lock-path: .buildchain/alpha-contract-lock.json
       buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
       allow-repository: kungfu-systems/taolu
-      channel: ${{ inputs.channel }}
+      channel: alpha
       target-ref: ${{ inputs.target-ref }}
       target-sha: ${{ inputs.target-sha }}
       package-manager: custom
@@ -91,6 +91,46 @@ jobs:
       github-release: true
       declarative-release-tail: true
       github-release-title: Taolu ${{ inputs.channel }}
+      github-release-payload-patterns: |
+        taolu-*
+      publish-artifact-kind: binary
+      release-passport: true
+      release-passport-product-name: Taolu
+      publication-auto-admission: true
+      publication-auto-no-gate: true
+      publication-publisher-workflow-path: .github/workflows/release.yml
+      publication-product: Taolu
+      publication-target: github-release:kungfu-systems/taolu
+      publication-package-name: ""
+      runner-preset: github-hosted
+      trusted-publishing: false
+      dry-run: false
+    secrets: inherit
+
+  promote-stable:
+    needs: alpha-dogfood-gate
+    if: ${{ inputs.channel == 'release' }}
+    uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
+    with:
+      buildchain-channel: stable
+      buildchain-ref: ${{ inputs.buildchain-ref || 'v4' }}
+      buildchain-contract-lock-path: .buildchain/contract-lock.json
+      buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
+      buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
+      allow-repository: kungfu-systems/taolu
+      channel: release
+      target-ref: ${{ inputs.target-ref }}
+      target-sha: ${{ inputs.target-sha }}
+      package-manager: custom
+      artifact-name: taolu
+      release-candidate-workflow-file: verify.yml
+      release-candidate-workflow-name: Verify
+      artifact-patterns: |
+        taolu-*
+      publish-target: github-release
+      github-release: true
+      declarative-release-tail: true
+      github-release-title: Taolu release
       github-release-payload-patterns: |
         taolu-*
       publish-artifact-kind: binary
