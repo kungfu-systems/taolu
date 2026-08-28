@@ -9,7 +9,9 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/kungfu-systems/taolu/internal/compiler"
@@ -59,10 +61,7 @@ func TestInstallAndRollback(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	launcher := filepath.Join(root, "bin", "demo")
-	if target, err := os.Readlink(launcher); err != nil || target != filepath.Join(first.InstalledPath, "bin", "tool") {
-		t.Fatalf("launcher does not activate first version: target=%q err=%v", target, err)
-	}
+	assertLauncherTarget(t, root, filepath.Join(first.InstalledPath, "bin", "tool"))
 	if receipt, err := Install(b1, "demo", "linux-x64", root); err != nil || receipt.Operation != "activate" {
 		t.Fatalf("exact reinstall is not idempotent: receipt=%+v err=%v", receipt, err)
 	}
@@ -71,9 +70,7 @@ func TestInstallAndRollback(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if target, err := os.Readlink(launcher); err != nil || target != filepath.Join(second.InstalledPath, "bin", "tool") {
-		t.Fatalf("launcher does not activate second version: target=%q err=%v", target, err)
-	}
+	assertLauncherTarget(t, root, filepath.Join(second.InstalledPath, "bin", "tool"))
 	receipt, err := Rollback("demo", root)
 	if err != nil {
 		t.Fatal(err)
@@ -81,8 +78,24 @@ func TestInstallAndRollback(t *testing.T) {
 	if receipt.Version != "1.0.0" {
 		t.Fatalf("unexpected rollback %s", receipt.Version)
 	}
-	if target, err := os.Readlink(launcher); err != nil || target != filepath.Join(first.InstalledPath, "bin", "tool") {
-		t.Fatalf("launcher did not roll back: target=%q err=%v", target, err)
+	assertLauncherTarget(t, root, filepath.Join(first.InstalledPath, "bin", "tool"))
+}
+
+func assertLauncherTarget(t *testing.T, root, target string) {
+	t.Helper()
+	launcher := filepath.Join(root, "bin", "demo")
+	if runtime.GOOS == "windows" {
+		launcher += ".cmd"
+		body, err := os.ReadFile(launcher)
+		expected := "@echo off\r\n\"" + strings.ReplaceAll(target, "%", "%%") + "\" %*\r\n"
+		if err != nil || string(body) != expected {
+			t.Fatalf("launcher does not activate %q: body=%q err=%v", target, body, err)
+		}
+		return
+	}
+	actual, err := os.Readlink(launcher)
+	if err != nil || actual != target {
+		t.Fatalf("launcher does not activate %q: target=%q err=%v", target, actual, err)
 	}
 }
 func TestOwnershipConflict(t *testing.T) {
