@@ -8,11 +8,11 @@ confidence: high
 sensitivity: public
 evidence_grade: A
 review_state: self-reviewed
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ai_provenance:
   model_family: GPT-5
   product: Codex
-  generated_at: 2026-08-27
+  generated_at: 2026-08-28
   invisible_context_boundary: Did not inspect credentials, private release assets, or provider secrets.
 ---
 
@@ -21,11 +21,11 @@ ai_provenance:
 Taolu separates product publication from product installation.
 
 1. Product repositories publish ordinary immutable GitHub Release assets.
-2. A Site-owned catalog pins the repository, tag, exact asset names, digests, extraction contract, and Taolu runtime version.
+2. A Site-owned catalog pins products, commands, default and historical versions, repositories, tags, exact asset names, digests, evidence assets, extraction contracts, and the Taolu runtime version.
 3. `taolu compile` joins that catalog with a pinned GitHub Release metadata snapshot and emits one rooted, deterministic bundle.
 4. The Site installs a checksum-pinned released Taolu CLI and runs `taolu installer` over its configuration.
 5. The Site serves the generated rooted bundle and product bootstraps; those bootstraps call the already installed Taolu runtime to download, verify, and activate the selected product asset.
-5. Installation is owned, staged, atomically activated, receipted, and rollback-capable under one user-writable Taolu root.
+6. Installation is owned, staged, activated through an owned launcher, receipted, and rollback-capable under one user-writable Taolu root. A generated Site installer may select one product/version or all catalog defaults.
 
 There is no product-side Taolu dependency, workflow, configuration, tag, hook, or release action. Adapters are a finite compiled registry. Version 1 supports only `exact-asset/v1`; catalogs cannot execute shell, PowerShell, JavaScript, or remote hooks.
 
