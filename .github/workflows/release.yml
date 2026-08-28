@@ -20,6 +20,10 @@ on:
         description: Exact reviewed release-candidate SHA
         required: true
         type: string
+      buildchain-ref:
+        description: Exact or floating Buildchain v4 runtime; defaults to the matching public channel
+        required: false
+        type: string
       alpha-dogfood-sha:
         description: Exact alpha commit with successful three-platform self dogfood (required for stable)
         required: false
@@ -69,7 +73,7 @@ jobs:
     uses: kungfu-systems/buildchain/.github/workflows/release-candidate-promote.yml@v4
     with:
       buildchain-channel: ${{ inputs.channel == 'alpha' && 'alpha' || 'stable' }}
-      buildchain-ref: ${{ inputs.channel == 'alpha' && 'v4-alpha' || 'v4' }}
+      buildchain-ref: ${{ inputs.buildchain-ref || (inputs.channel == 'alpha' && 'v4-alpha' || 'v4') }}
       buildchain-contract-lock-path: .buildchain/contract-lock.json
       buildchain-stable-contract-lock-path: .buildchain/contract-lock.json
       buildchain-alpha-contract-lock-path: .buildchain/alpha-contract-lock.json
