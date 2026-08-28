@@ -1,16 +1,54 @@
 {
   "schema": "taolu.catalog/v1",
   "taoluVersion": "1.0.0",
+  "defaultProduct": "kungfu",
   "products": [
     {
       "id": "kungfu",
+      "command": "kungfu",
       "repository": "kungfu-systems/kungfu",
-      "releaseTag": "v4.0.0-alpha.3",
+      "defaultVersion": "4.0.0-alpha.3",
       "adapter": { "kind": "exact-asset", "version": 1 },
-      "platforms": [
-        { "id": "darwin-arm64", "assetName": "kungfu-darwin-arm64.tar.gz", "sha256": "REPLACE_WITH_RELEASE_SHA256", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "bin/kungfu" },
-        { "id": "linux-x64", "assetName": "kungfu-linux-x64.tar.gz", "sha256": "REPLACE_WITH_RELEASE_SHA256", "archive": "tar.gz", "stripComponents": 1, "entrypoint": "bin/kungfu" },
-        { "id": "windows-x64", "assetName": "kungfu-windows-x64.zip", "sha256": "REPLACE_WITH_RELEASE_SHA256", "archive": "zip", "stripComponents": 1, "entrypoint": "bin/kungfu.exe" }
+      "versions": [
+        {
+          "version": "4.0.0-alpha.3",
+          "releaseTag": "v4.0.0-alpha.3",
+          "sourceSha": "6d99af738b78eccb48885a5fd59b88a0e5e4900a",
+          "platforms": [
+            {
+              "id": "darwin-arm64",
+              "assetName": "kungfu-episodes-cli-darwin-arm64.tar.gz",
+              "sha256": "be64a25a8756e03dfd1c3b59374dac781cd50eea645ed09a691c398de42403af",
+              "archive": "tar.gz",
+              "stripComponents": 1,
+              "entrypoint": "kungfu"
+            },
+            {
+              "id": "linux-arm64",
+              "assetName": "kungfu-episodes-cli-linux-arm64.tar.gz",
+              "sha256": "15addf6285a236ec5b0088fd7373dbc4a4e0fdeb748271f7b95c54834c48ca4d",
+              "archive": "tar.gz",
+              "stripComponents": 1,
+              "entrypoint": "kungfu"
+            },
+            {
+              "id": "linux-x64",
+              "assetName": "kungfu-episodes-cli-linux-x64.tar.gz",
+              "sha256": "c7ede1fc9692a25a6ebefd32cac75e9fcaa5c7717d3568a599695ebc63239d49",
+              "archive": "tar.gz",
+              "stripComponents": 1,
+              "entrypoint": "kungfu"
+            },
+            {
+              "id": "windows-x64",
+              "assetName": "kungfu-episodes-cli-windows-x64.zip",
+              "sha256": "ca467459a9b1e6b89b3cd1fd6c460807cba983e2368c85001537c51529de703b",
+              "archive": "zip",
+              "stripComponents": 1,
+              "entrypoint": "kungfu.cmd"
+            }
+          ]
+        }
       ]
     }
   ]

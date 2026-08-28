@@ -70,8 +70,11 @@ func run(args []string) error {
 		bundlePath := fs.String("bundle", "", "compiled bundle JSON")
 		product := fs.String("product", "", "product id")
 		platform := fs.String("platform", "auto", "platform id")
+		version := fs.String("version", "", "exact product version (defaults to the Site-selected version)")
 		bundleRoot := fs.String("bundle-root", "", "expected sha256 bundle root")
 		root := fs.String("root", defaultRoot(), "Taolu root")
+		binDir := fs.String("bin-dir", "", "launcher directory (defaults to ROOT/bin)")
+		dryRun := fs.Bool("dry-run", false, "print the exact plan without changing the machine")
 		if err := fs.Parse(args[1:]); err != nil {
 			return err
 		}
@@ -88,7 +91,21 @@ func run(args []string) error {
 		if bundle.TaoluVersion != productmeta.Version {
 			return fmt.Errorf("bundle requires Taolu %s, running %s", bundle.TaoluVersion, productmeta.Version)
 		}
-		receipt, err := installer.Install(bundle, *product, *platform, *root)
+		if *product == "all" {
+			if *version != "" {
+				return errors.New("--version is only valid for one product")
+			}
+			receipts := make([]installer.Receipt, 0, len(bundle.Products))
+			for _, bundledProduct := range bundle.Products {
+				receipt, err := installer.InstallWithOptions(bundle, installer.Options{Product: bundledProduct.ID, Platform: *platform, Root: *root, BinDir: *binDir, DryRun: *dryRun})
+				if err != nil {
+					return fmt.Errorf("install %s: %w", bundledProduct.ID, err)
+				}
+				receipts = append(receipts, receipt)
+			}
+			return emit(receipts)
+		}
+		receipt, err := installer.InstallWithOptions(bundle, installer.Options{Product: *product, Version: *version, Platform: *platform, Root: *root, BinDir: *binDir, DryRun: *dryRun})
 		if err != nil {
 			return err
 		}

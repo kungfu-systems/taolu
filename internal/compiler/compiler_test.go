@@ -101,16 +101,32 @@ func TestSiteCatalogExamplesCompile(t *testing.T) {
 
 			releases := Releases{Schema: "taolu.github-releases/v1"}
 			for productIndex, product := range catalog.Products {
-				release := Release{Repository: product.Repository, Tag: product.ReleaseTag, ID: int64(productIndex + 1)}
-				for platformIndex, platform := range product.Platforms {
-					release.Assets = append(release.Assets, Asset{
-						ID:   int64((productIndex+1)*100 + platformIndex),
-						Name: platform.AssetName,
-						URL:  "https://example.invalid/" + platform.AssetName,
-						Size: 1,
-					})
+				versions, _, err := normalizedVersions(product)
+				if err != nil {
+					t.Fatal(err)
 				}
-				releases.Releases = append(releases.Releases, release)
+				for versionIndex, version := range versions {
+					release := Release{Repository: product.Repository, Tag: version.ReleaseTag, ID: int64((productIndex+1)*100 + versionIndex + 1)}
+					seenAssets := map[string]bool{}
+					for platformIndex, platform := range version.Platforms {
+						if !seenAssets[platform.AssetName] {
+							release.Assets = append(release.Assets, Asset{
+								ID:   int64((productIndex+1)*10000 + (versionIndex+1)*100 + platformIndex),
+								Name: platform.AssetName,
+								URL:  "https://github.com/" + product.Repository + "/releases/download/" + version.ReleaseTag + "/" + platform.AssetName,
+								Size: 1,
+							})
+							seenAssets[platform.AssetName] = true
+						}
+						for evidenceIndex, evidence := range platform.Evidence {
+							if evidence.AssetName != "" && !seenAssets[evidence.AssetName] {
+								release.Assets = append(release.Assets, Asset{ID: int64((productIndex+1)*1000000 + (versionIndex+1)*10000 + platformIndex*100 + evidenceIndex), Name: evidence.AssetName, URL: "https://github.com/" + product.Repository + "/releases/download/" + version.ReleaseTag + "/" + evidence.AssetName, Size: 1})
+								seenAssets[evidence.AssetName] = true
+							}
+						}
+					}
+					releases.Releases = append(releases.Releases, release)
+				}
 			}
 
 			catalogPath := filepath.Join(root, "catalog.json")

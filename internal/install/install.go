@@ -21,11 +21,14 @@ import (
 )
 
 type State struct {
-	Schema     string `json:"schema"`
-	Product    string `json:"product"`
-	Current    string `json:"current"`
-	Previous   string `json:"previous,omitempty"`
-	BundleRoot string `json:"bundleRoot"`
+	Schema      string            `json:"schema"`
+	Product     string            `json:"product"`
+	Command     string            `json:"command"`
+	Current     string            `json:"current"`
+	Previous    string            `json:"previous,omitempty"`
+	BundleRoot  string            `json:"bundleRoot"`
+	Launcher    string            `json:"launcher,omitempty"`
+	Entrypoints map[string]string `json:"entrypoints,omitempty"`
 }
 type Receipt struct {
 	Schema         string `json:"schema"`
@@ -39,31 +42,71 @@ type Receipt struct {
 	RecordedAt     string `json:"recordedAt"`
 }
 
+type VersionRecord struct {
+	Schema         string `json:"schema"`
+	Product        string `json:"product"`
+	Version        string `json:"version"`
+	Platform       string `json:"platform"`
+	ArtifactSHA256 string `json:"artifactSha256"`
+	Entrypoint     string `json:"entrypoint"`
+}
+
+type Options struct {
+	Product  string
+	Version  string
+	Platform string
+	Root     string
+	BinDir   string
+	DryRun   bool
+}
+
 func PlatformID() string {
 	arch := map[string]string{"amd64": "x64", "arm64": "arm64"}[runtime.GOARCH]
 	return runtime.GOOS + "-" + arch
 }
 
 func Install(bundle compiler.Bundle, productID, platformID, root string) (Receipt, error) {
+	return InstallWithOptions(bundle, Options{Product: productID, Platform: platformID, Root: root})
+}
+
+func InstallWithOptions(bundle compiler.Bundle, options Options) (Receipt, error) {
 	if err := compiler.VerifyBundle(bundle); err != nil {
 		return Receipt{}, err
 	}
+	productID := options.Product
+	platformID := options.Platform
+	root := options.Root
 	if platformID == "" || platformID == "auto" {
 		platformID = PlatformID()
 	}
-	product, platform, err := selectTarget(bundle, productID, platformID)
+	product, version, platform, err := selectTarget(bundle, productID, options.Version, platformID)
 	if err != nil {
 		return Receipt{}, err
+	}
+	if options.DryRun {
+		return Receipt{Schema: "taolu.install-receipt/v1", Operation: "plan", Product: product.ID, Version: version.Version, Platform: platformID, BundleRoot: bundle.BundleRoot, ArtifactSHA256: platform.SHA256, InstalledPath: filepath.Join(root, "products", product.ID, "versions", version.Version), RecordedAt: time.Now().UTC().Format(time.RFC3339Nano)}, nil
 	}
 	productRoot := filepath.Join(root, "products", product.ID)
 	if err := ensureOwnership(productRoot, product.ID); err != nil {
 		return Receipt{}, err
 	}
+	lock := filepath.Join(productRoot, ".install.lock")
+	if err := os.Mkdir(lock, 0o700); err != nil {
+		if errors.Is(err, os.ErrExist) {
+			return Receipt{}, errors.New("another Taolu installation owns the product lock")
+		}
+		return Receipt{}, err
+	}
+	defer os.Remove(lock)
 	cache := filepath.Join(root, "cache", platform.SHA256)
+	for _, evidence := range platform.Evidence {
+		if err := fetch(evidence.URL, filepath.Join(root, "cache", evidence.SHA256), evidence.SHA256, evidence.Size); err != nil {
+			return Receipt{}, fmt.Errorf("verify %s evidence: %w", evidence.Kind, err)
+		}
+	}
 	if err := fetch(platform.URL, cache, platform.SHA256, platform.Size); err != nil {
 		return Receipt{}, err
 	}
-	version := strings.TrimPrefix(product.ReleaseTag, "v")
 	versions := filepath.Join(productRoot, "versions")
 	if entries, readErr := os.ReadDir(versions); readErr == nil {
 		for _, entry := range entries {
@@ -74,9 +117,41 @@ func Install(bundle compiler.Bundle, productID, platformID, root string) (Receip
 	} else if !errors.Is(readErr, os.ErrNotExist) {
 		return Receipt{}, readErr
 	}
-	destination := filepath.Join(versions, version)
-	if _, err := os.Stat(destination); err == nil {
-		return Receipt{}, fmt.Errorf("version %s is already installed", version)
+	destination := filepath.Join(versions, version.Version)
+	if info, err := os.Stat(destination); err == nil {
+		if !info.IsDir() {
+			return Receipt{}, fmt.Errorf("installed version path %s is not a directory", version.Version)
+		}
+		var record VersionRecord
+		if _, err := compiler.ReadJSON(filepath.Join(destination, ".taolu-version.json"), &record); err != nil || record.Schema != "taolu.version-record/v1" || record.Product != product.ID || record.Version != version.Version || record.Platform != platformID || record.ArtifactSHA256 != platform.SHA256 || record.Entrypoint != platform.Entrypoint {
+			return Receipt{}, fmt.Errorf("installed version %s does not match the exact bundle", version.Version)
+		}
+		state, _ := readState(productRoot)
+		if state.Entrypoints == nil {
+			state.Entrypoints = map[string]string{}
+		}
+		state.Entrypoints[version.Version] = platform.Entrypoint
+		binDir := options.BinDir
+		if binDir == "" {
+			binDir = filepath.Join(root, "bin")
+		}
+		launcher, err := activateLauncher(productRoot, product.Command, filepath.Join(destination, filepath.FromSlash(platform.Entrypoint)), binDir, state.Launcher)
+		if err != nil {
+			return Receipt{}, err
+		}
+		previous := state.Current
+		if previous == version.Version {
+			previous = state.Previous
+		}
+		state = State{Schema: "taolu.install-state/v1", Product: product.ID, Command: product.Command, Current: version.Version, Previous: previous, BundleRoot: bundle.BundleRoot, Launcher: launcher, Entrypoints: state.Entrypoints}
+		if err := writeAtomic(filepath.Join(productRoot, "state.json"), state); err != nil {
+			return Receipt{}, err
+		}
+		receipt := Receipt{Schema: "taolu.install-receipt/v1", Operation: "activate", Product: product.ID, Version: version.Version, Platform: platformID, BundleRoot: bundle.BundleRoot, ArtifactSHA256: platform.SHA256, InstalledPath: destination, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano)}
+		if err := writeReceipt(productRoot, receipt); err != nil {
+			return Receipt{}, err
+		}
+		return receipt, nil
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return Receipt{}, err
 	}
@@ -105,17 +180,45 @@ func Install(bundle compiler.Bundle, productID, platformID, root string) (Receip
 	if err != nil || !info.Mode().IsRegular() {
 		return Receipt{}, errors.New("declared entrypoint is not a regular extracted file")
 	}
+	if platform.EntrypointSHA256 != "" {
+		entryBytes, readErr := os.ReadFile(entry)
+		if readErr != nil || sha(entryBytes) != platform.EntrypointSHA256 {
+			return Receipt{}, errors.New("extracted entrypoint digest mismatch")
+		}
+	}
+	if runtime.GOOS != "windows" {
+		if err := os.Chmod(entry, 0o755); err != nil {
+			return Receipt{}, err
+		}
+	}
+	versionRecord := VersionRecord{Schema: "taolu.version-record/v1", Product: product.ID, Version: version.Version, Platform: platformID, ArtifactSHA256: platform.SHA256, Entrypoint: platform.Entrypoint}
+	if err := writeAtomic(filepath.Join(staging, ".taolu-version.json"), versionRecord); err != nil {
+		return Receipt{}, err
+	}
 	if err := os.Rename(staging, destination); err != nil {
 		return Receipt{}, err
 	}
 	committed = true
 	state, _ := readState(productRoot)
-	newState := State{Schema: "taolu.install-state/v1", Product: product.ID, Current: version, Previous: state.Current, BundleRoot: bundle.BundleRoot}
+	if state.Entrypoints == nil {
+		state.Entrypoints = map[string]string{}
+	}
+	state.Entrypoints[version.Version] = platform.Entrypoint
+	binDir := options.BinDir
+	if binDir == "" {
+		binDir = filepath.Join(root, "bin")
+	}
+	launcher, err := activateLauncher(productRoot, product.Command, filepath.Join(destination, filepath.FromSlash(platform.Entrypoint)), binDir, state.Launcher)
+	if err != nil {
+		_ = os.RemoveAll(destination)
+		return Receipt{}, err
+	}
+	newState := State{Schema: "taolu.install-state/v1", Product: product.ID, Command: product.Command, Current: version.Version, Previous: state.Current, BundleRoot: bundle.BundleRoot, Launcher: launcher, Entrypoints: state.Entrypoints}
 	if err := writeAtomic(filepath.Join(productRoot, "state.json"), newState); err != nil {
 		_ = os.RemoveAll(destination)
 		return Receipt{}, err
 	}
-	receipt := Receipt{Schema: "taolu.install-receipt/v1", Operation: "install", Product: product.ID, Version: version, Platform: platformID, BundleRoot: bundle.BundleRoot, ArtifactSHA256: platform.SHA256, InstalledPath: destination, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano)}
+	receipt := Receipt{Schema: "taolu.install-receipt/v1", Operation: "install", Product: product.ID, Version: version.Version, Platform: platformID, BundleRoot: bundle.BundleRoot, ArtifactSHA256: platform.SHA256, InstalledPath: destination, RecordedAt: time.Now().UTC().Format(time.RFC3339Nano)}
 	if err := writeReceipt(productRoot, receipt); err != nil {
 		return Receipt{}, err
 	}
@@ -127,6 +230,14 @@ func Rollback(productID, root string) (Receipt, error) {
 	if err := ensureExistingOwnership(productRoot, productID); err != nil {
 		return Receipt{}, err
 	}
+	lock := filepath.Join(productRoot, ".install.lock")
+	if err := os.Mkdir(lock, 0o700); err != nil {
+		if errors.Is(err, os.ErrExist) {
+			return Receipt{}, errors.New("another Taolu installation owns the product lock")
+		}
+		return Receipt{}, err
+	}
+	defer os.Remove(lock)
 	state, err := readState(productRoot)
 	if err != nil {
 		return Receipt{}, err
@@ -136,6 +247,13 @@ func Rollback(productID, root string) (Receipt, error) {
 	}
 	if info, err := os.Stat(filepath.Join(productRoot, "versions", state.Previous)); err != nil || !info.IsDir() {
 		return Receipt{}, errors.New("previous version is unavailable")
+	}
+	entrypoint := state.Entrypoints[state.Previous]
+	if entrypoint == "" || state.Launcher == "" {
+		return Receipt{}, errors.New("previous version activation metadata is unavailable")
+	}
+	if _, err := activateLauncher(productRoot, state.Command, filepath.Join(productRoot, "versions", state.Previous, filepath.FromSlash(entrypoint)), filepath.Dir(state.Launcher), state.Launcher); err != nil {
+		return Receipt{}, err
 	}
 	state.Current, state.Previous = state.Previous, state.Current
 	if err := writeAtomic(filepath.Join(productRoot, "state.json"), state); err != nil {
@@ -156,18 +274,27 @@ func Status(productID, root string) (State, error) {
 	return readState(productRoot)
 }
 
-func selectTarget(bundle compiler.Bundle, productID, platformID string) (compiler.BundleProduct, compiler.BundlePlatform, error) {
+func selectTarget(bundle compiler.Bundle, productID, versionID, platformID string) (compiler.BundleProduct, compiler.BundleVersion, compiler.BundlePlatform, error) {
 	for _, p := range bundle.Products {
 		if p.ID == productID {
-			for _, platform := range p.Platforms {
-				if platform.ID == platformID {
-					return p, platform, nil
-				}
+			if versionID == "" {
+				versionID = p.DefaultVersion
 			}
-			return p, compiler.BundlePlatform{}, fmt.Errorf("unsupported platform %s", platformID)
+			for _, version := range p.Versions {
+				if version.Version != versionID {
+					continue
+				}
+				for _, platform := range version.Platforms {
+					if platform.ID == platformID {
+						return p, version, platform, nil
+					}
+				}
+				return p, version, compiler.BundlePlatform{}, fmt.Errorf("unsupported platform %s", platformID)
+			}
+			return p, compiler.BundleVersion{}, compiler.BundlePlatform{}, fmt.Errorf("unknown version %s", versionID)
 		}
 	}
-	return compiler.BundleProduct{}, compiler.BundlePlatform{}, fmt.Errorf("unknown product %s", productID)
+	return compiler.BundleProduct{}, compiler.BundleVersion{}, compiler.BundlePlatform{}, fmt.Errorf("unknown product %s", productID)
 }
 
 func ensureOwnership(root, product string) error {
@@ -193,6 +320,43 @@ func ensureExistingOwnership(root, product string) error {
 		return errors.New("Taolu ownership record is missing")
 	}
 	return ensureOwnership(root, product)
+}
+
+func activateLauncher(productRoot, command, entrypoint, binDir, previousLauncher string) (string, error) {
+	if info, err := os.Stat(entrypoint); err != nil || !info.Mode().IsRegular() {
+		return "", errors.New("activation entrypoint is unavailable")
+	}
+	if err := os.MkdirAll(binDir, 0o755); err != nil {
+		return "", err
+	}
+	launcher := filepath.Join(binDir, command)
+	if runtime.GOOS == "windows" {
+		launcher += ".cmd"
+	}
+	if _, err := os.Lstat(launcher); err == nil && previousLauncher != launcher {
+		return "", fmt.Errorf("refusing to overwrite foreign launcher %s", launcher)
+	} else if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return "", err
+	}
+	temporary := launcher + fmt.Sprintf(".taolu-%d", os.Getpid())
+	_ = os.Remove(temporary)
+	if runtime.GOOS == "windows" {
+		body := "@echo off\r\n\"" + strings.ReplaceAll(entrypoint, "%", "%%") + "\" %*\r\n"
+		if err := os.WriteFile(temporary, []byte(body), 0o600); err != nil {
+			return "", err
+		}
+	} else if err := os.Symlink(entrypoint, temporary); err != nil {
+		return "", err
+	}
+	if err := os.Rename(temporary, launcher); err != nil {
+		_ = os.Remove(temporary)
+		return "", err
+	}
+	owner := map[string]string{"schema": "taolu.launcher-owner/v1", "product": filepath.Base(productRoot), "launcher": launcher}
+	if err := writeAtomic(filepath.Join(productRoot, "launcher.json"), owner); err != nil {
+		return "", err
+	}
+	return launcher, nil
 }
 
 func fetch(rawURL, destination, digest string, expectedSize int64) error {
@@ -293,7 +457,20 @@ func readState(root string) (State, error) {
 	if state.Schema != "taolu.install-state/v1" {
 		return state, errors.New("unsupported install state")
 	}
+	if !safeSegment(state.Product) || !safeSegment(state.Command) || !safeSegment(state.Current) || (state.Previous != "" && !safeSegment(state.Previous)) {
+		return state, errors.New("unsafe install state identity")
+	}
+	for version, entrypoint := range state.Entrypoints {
+		clean := filepath.ToSlash(entrypoint)
+		if !safeSegment(version) || entrypoint == "" || filepath.IsAbs(entrypoint) || clean == ".." || strings.HasPrefix(clean, "../") || strings.Contains(clean, "/../") || strings.ContainsAny(entrypoint, `\\:`) {
+			return state, errors.New("unsafe install state entrypoint")
+		}
+	}
 	return state, nil
+}
+
+func safeSegment(value string) bool {
+	return value != "" && value != "." && value != ".." && filepath.Base(value) == value && !strings.ContainsAny(value, `/\\:`)
 }
 func writeAtomic(path string, value any) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
