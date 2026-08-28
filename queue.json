@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 75,
+  "generation": 76,
   "fencingCounter": 10,
   "policy": {
     "agingSeconds": 900,
@@ -537,8 +537,55 @@
         ".github/CODEOWNERS"
       ],
       "shardEvidenceRoots": []
+    },
+    {
+      "repository": "kungfu-systems/taolu",
+      "protectedBase": "dev/v1/v1.0",
+      "pullRequestNumber": 25,
+      "assignmentRoot": "sha256:41f591884de300bdd0f0066592b6b55dd1450dfbdff9d7b11efcc608a6562048",
+      "initiativeRoot": "sha256:dea3c67cd9b2b6209e5f8b2655472b0a432be061a5df1ce767df2feaffe6cdcf",
+      "sourceIdentityRoot": "sha256:61ef13e601a7c6d4fed9e4d3c14e2b7a665bc338dd7157edfe24914d706cfb39",
+      "deliveryClass": "native-proof-required",
+      "candidateId": "sha256:e2341b20b0de58e73438dd1b85d08c4448feb6accd357d90e54dcd1d2dc2f768",
+      "sourceHead": "df01763e3e5dbc4ea80f5f1d3a190a826e8af21f",
+      "sourcePatchRoot": "sha256:99d33240803e8a3507cb4c4b6e8c0025f1bbe44979f03f6d63804ed15be6f831",
+      "sourceProofRoot": "sha256:830e965814c06fde915c3d8eb20af75acf538f9d0c1aeb5262c28bccc9aa8525",
+      "planRoot": "sha256:520f9afbbc0aca48ceff12f17037516ca9c2a0abe3d15dc40fe16be693c13c98",
+      "closureRoot": "sha256:e4f860ce1fcd88d0f06dbcf7b6903007699004be6e3b0ee4a7823852d3d363f7",
+      "dependencyRoot": "sha256:c072b029584609c15bf69f68ffa79b95fa3d3854846bb2ee7c61c2e4d30631c4",
+      "toolchainRoot": "sha256:74e900ebfccd02b1db166486f40cf8ecbb8c59a55ea2f52602cd34e7fb77cd1f",
+      "environmentRoot": "sha256:029fbd0d0280f42fde22c77e69da9b627da2e162a450de2165da1ca12aee47f9",
+      "nativeCommandContract": {
+        "schema": "kungfu.buildchain.native-command-contract/v1",
+        "runner": "bash-lc",
+        "command": "go test -race ./... && go vet ./...",
+        "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
+      },
+      "sourceWorkflowRunId": 33145951989,
+      "priority": "ordinary",
+      "enqueuedAt": "2026-08-28T06:00:52.498Z",
+      "updatedAt": "2026-08-28T06:00:52.498Z",
+      "attempts": 1,
+      "recoveries": 0,
+      "status": "queued",
+      "terminal": null,
+      "affectedPaths": [
+        "README.md",
+        "cmd/taolu/main.go",
+        "docs/adoption.md",
+        "docs/architecture.md",
+        "examples/site-kungfu-tech/catalog.json",
+        "examples/site-libkungfu-dev/catalog.json",
+        "internal/compiler/compiler.go",
+        "internal/compiler/compiler_test.go",
+        "internal/generator/generator.go",
+        "internal/generator/generator_test.go",
+        "internal/install/install.go",
+        "internal/install/install_test.go"
+      ],
+      "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-08-27T21:53:52.616Z",
-  "stateRoot": "sha256:c689d35bc392f71b7cdf2745ea4d1f8253b9c734deffa91d2aa3200947061431"
+  "updatedAt": "2026-08-28T06:00:52.498Z",
+  "stateRoot": "sha256:9eecce106d55b750cabec2ca30c907377d1dbe4c3c6eb97274e5988aea25a8fd"
 }
