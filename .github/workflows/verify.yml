@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   stage-capsule:
-    uses: kungfu-systems/buildchain/.github/workflows/v4-stage-capsule-canary.yml@v4-alpha
+    uses: kungfu-systems/buildchain/.github/workflows/v4-stage-capsule-canary.yml@0b79d48b8e0f3431339b95379180582456f66724
     with:
       consumer: taolu
       node-version: "24"
@@ -23,7 +23,7 @@ jobs:
       verify-artifact-path: .buildchain/verify.receipt
 
   build:
-    uses: kungfu-systems/buildchain/.github/workflows/build.yml@v4-alpha
+    uses: kungfu-systems/buildchain/.github/workflows/build.yml@0b79d48b8e0f3431339b95379180582456f66724
     permissions:
       actions: read
       contents: read
