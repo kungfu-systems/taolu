@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   stage-capsule:
-    uses: kungfu-systems/buildchain/.github/workflows/v4-stage-capsule-canary.yml@v4-alpha
+    uses: kungfu-systems/buildchain/.github/workflows/public-build-stage-capsule-canary.yml@v4-alpha
     with:
       consumer: taolu
       node-version: "24"
