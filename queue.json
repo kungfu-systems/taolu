@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 125,
+  "generation": 126,
   "fencingCounter": 18,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:e84d1ec5732444b1b52ab51f3b3f0c756ff9ee3a717b6971535d9de721299ad7",
@@ -48,8 +48,13 @@
     "issuedAt": "2026-09-06T11:56:08.497Z",
     "expiresAt": "2026-09-06T12:57:35.221Z",
     "fencingToken": "sha256:95e23a51c3087e73b1ab86215129c6afefead5dd0e78bb533e734271cf396398",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-09-06T11:57:35.221Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-09-06T11:57:35.221Z",
+    "nativeProofRoot": "sha256:7bdcbf4e6ce02c36dbc55edb0db8b0dc528a43fc0b3ca5494e918179e3a105c4",
+    "nativeExecutionReceiptRoot": "sha256:81d270fcaab2e80e6c3cad4ad0c366c2e28874720f0559c85160291cb22e99be",
+    "nativeProofReuseRoot": "sha256:97eb0291813068e291c17c1eebc159d3783875762c56a3349382ef283a467917",
+    "qualificationReceiptRoot": "sha256:f610b82b94faf45b899931412789008297592120374a7e441922ff57e034f05a",
+    "qualifiedAt": "2026-09-06T11:57:53.606Z"
   },
   "candidates": [
     {
@@ -959,10 +964,10 @@
       "sourceWorkflowRunId": 34031331755,
       "priority": "ordinary",
       "enqueuedAt": "2026-09-06T11:56:04.345Z",
-      "updatedAt": "2026-09-06T11:57:35.221Z",
+      "updatedAt": "2026-09-06T11:57:53.606Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         "internal/product/version.json",
@@ -971,6 +976,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T11:57:35.221Z",
-  "stateRoot": "sha256:867d44eb5b4a7daabc6d4a2979f56438e1ef546617f5da49f21c9019e83b126c"
+  "updatedAt": "2026-09-06T11:57:53.606Z",
+  "stateRoot": "sha256:326856d7c1d686591c08bee4a9a653df46485e3246e038a5dd7e4386d93ff867"
 }
