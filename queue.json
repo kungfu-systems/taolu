@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 111,
+  "generation": 112,
   "fencingCounter": 16,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:eac84f44731588778ec49539b3beb882d9bb3b352c59be03377b5b2ab1f161ae",
@@ -50,8 +50,13 @@
     "issuedAt": "2026-09-06T11:19:02.482Z",
     "expiresAt": "2026-09-06T12:20:27.927Z",
     "fencingToken": "sha256:72a3f15319962f07e501c092b7cc8c747dca45882338f531527ba18f13ae2628",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-09-06T11:20:27.927Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-09-06T11:20:27.927Z",
+    "nativeProofRoot": "sha256:747f17e94fad46cd79bca8b8329afe7ca2d5f94e0398189996840a0bdbf771b0",
+    "nativeExecutionReceiptRoot": "sha256:6a72b4348c119e148dfeff8ceae638305007efc5a5b4de5a07c997af610c7655",
+    "nativeProofReuseRoot": "sha256:fee19368f118adb3fa5520f929cb8b880d00c13eb713b33b62c3a88ce66ed1a3",
+    "qualificationReceiptRoot": "sha256:502af83bc554672de065a0985eb960557be07b758d57c88d251d617277fb9750",
+    "qualifiedAt": "2026-09-06T11:20:51.999Z"
   },
   "candidates": [
     {
@@ -868,10 +873,10 @@
       "sourceWorkflowRunId": 34029691502,
       "priority": "ordinary",
       "enqueuedAt": "2026-09-06T11:18:58.926Z",
-      "updatedAt": "2026-09-06T11:20:27.927Z",
+      "updatedAt": "2026-09-06T11:20:51.999Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         "cmd/build/main.go",
@@ -882,6 +887,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T11:20:27.927Z",
-  "stateRoot": "sha256:42c08f102af11d77334acc5af9d246a26cb92d4b988dc8f3aab1a5669e9d72ae"
+  "updatedAt": "2026-09-06T11:20:51.999Z",
+  "stateRoot": "sha256:ea2f151b4aa20bd2d331636085602f0feb392841d69ae7cbd96a2ef89f296f9d"
 }
