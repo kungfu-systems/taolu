@@ -29,6 +29,15 @@ func TestBuildRejectsInvalidWorkflowPlatformBeforeHostFallback(t *testing.T) {
 	}
 }
 
+func TestBuildRejectsInvalidActionPlatformBeforeLegacyFallback(t *testing.T) {
+	t.Setenv("BUILDCHAIN_PLATFORM_ID", "")
+	t.Setenv("INPUT_PLATFORM-ID", "unsupported-action-target")
+	t.Setenv("BUILDCHAIN_PLATFORM", "linux-x64")
+	if err := run(); err == nil || !strings.Contains(err.Error(), "unsupported-action-target") {
+		t.Fatalf("expected the declared action platform to be validated, got %v", err)
+	}
+}
+
 func TestPackageBootstrapBindsVersion(t *testing.T) {
 	out := filepath.Join(t.TempDir(), "install.sh")
 	if err := packageBootstrap(filepath.Join("..", "..", "bootstrap", "install.sh"), out, 0o755); err != nil {

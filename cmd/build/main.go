@@ -24,6 +24,9 @@ func main() {
 func run() error {
 	platform := os.Getenv("BUILDCHAIN_PLATFORM_ID")
 	if platform == "" {
+		platform = os.Getenv("INPUT_PLATFORM-ID")
+	}
+	if platform == "" {
 		platform = os.Getenv("BUILDCHAIN_PLATFORM")
 	}
 	if platform == "" {
