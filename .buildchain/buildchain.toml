@@ -17,6 +17,7 @@ key = "version"
 command = "go env GOVERSION > .buildchain/install.receipt"
 
 [lifecycle.build]
+shell = "bash"
 command = "go run ./cmd/build"
 
 [lifecycle.verify]
