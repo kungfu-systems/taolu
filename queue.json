@@ -3,15 +3,52 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 96,
-  "fencingCounter": 13,
+  "generation": 97,
+  "fencingCounter": 14,
   "policy": {
     "agingSeconds": 900,
     "maxPriority": 2,
     "leaseSeconds": 3600,
     "emergencyPolicy": "reviewed-explicit-only"
   },
-  "activeWarrant": null,
+  "activeWarrant": {
+    "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
+    "phase": "provisional",
+    "repository": "kungfu-systems/taolu",
+    "protectedBase": "dev/v1/v1.0",
+    "candidateId": "sha256:089d48f646760603b34fd7c7db3b1e2a4249b08515826ce62a3278c7cb320033",
+    "pullRequestNumber": 31,
+    "sourceHead": "b935b38c4e3bf76c816e5d8f2ed5d31ef5c30040",
+    "assignmentRoot": "sha256:e6d9aba831654ea3959c5adef511e3035a55e96b04f72e3422bc33e3cf7b38c9",
+    "initiativeRoot": "sha256:71d3bf67607ad7ca26270805bd0b37febb532889f0eeeff083726556e16f2288",
+    "sourceIdentityRoot": "sha256:3bd99f820eab518a646bf9ee42b58d2286109a7a08523ff27d81759a87be3011",
+    "sourcePatchRoot": "sha256:4ac7e47b60726227f995bb28d49ef696bab023e7289762643fa9a61b1eef8138",
+    "sourceProofRoot": "sha256:eef832ea67a30f057edf5244e5ccebf861b8eae59b89d3a4d795af937363c094",
+    "planRoot": "sha256:9870e06213c4210c7c4f321eb3c5de1f315a02e9a7123b255fa21cabae4b0647",
+    "closureRoot": "sha256:0d8aafb4555f9cb92030de66e020965c3d3d33371fc44d2c09792b489b5c1f3b",
+    "dependencyRoot": "sha256:a2f18e7b243469c8c187070a6aaee566206409135413998324c2bfd1b4bf08f3",
+    "toolchainRoot": "sha256:16b92ca9f27a31c1fc66c81ab0332b855f189d8b3814b42b5699e8efb15f25b3",
+    "environmentRoot": "sha256:34ff131b0bc91b50f6cdd12f176c38bafcdfb36ccb0a680d010efb26040f87fd",
+    "nativeCommandContract": {
+      "schema": "kungfu.buildchain.native-command-contract/v1",
+      "runner": "bash-lc",
+      "command": "go test -race ./... && go vet ./...",
+      "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
+    },
+    "affectedPaths": [
+      ".github/workflows/release.yml"
+    ],
+    "shardEvidenceRoots": [],
+    "sourceWorkflowRunId": 34021849297,
+    "deliveryClass": "native-proof-required",
+    "priority": "ordinary",
+    "generation": 14,
+    "expectedOldStateRoot": "sha256:6a959378f00ccd7e7be7b59035c14ef411895da751138ad9bcace156495de330",
+    "issuedAt": "2026-09-06T08:35:36.360Z",
+    "expiresAt": "2026-09-06T09:35:36.360Z",
+    "fencingToken": "sha256:7257cb758b59fd373cef5c2b350e7afac996eff963e4f1fac58de7ad756d4522",
+    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission."
+  },
   "candidates": [
     {
       "repository": "kungfu-systems/taolu",
@@ -707,10 +744,10 @@
       "sourceWorkflowRunId": 34021849297,
       "priority": "ordinary",
       "enqueuedAt": "2026-09-06T08:35:34.177Z",
-      "updatedAt": "2026-09-06T08:35:34.177Z",
+      "updatedAt": "2026-09-06T08:35:36.360Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "queued",
+      "status": "selected",
       "terminal": null,
       "affectedPaths": [
         ".github/workflows/release.yml"
@@ -718,6 +755,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T08:35:34.177Z",
-  "stateRoot": "sha256:6a959378f00ccd7e7be7b59035c14ef411895da751138ad9bcace156495de330"
+  "updatedAt": "2026-09-06T08:35:36.360Z",
+  "stateRoot": "sha256:e0675bc6f875f22aeb384ae513a6676632056a1ccd3e3064ffba58f54d1a268c"
 }
