@@ -1,0 +1,12 @@
+{
+  "schema": "kungfu.buildchain.release-activation/v1",
+  "subject": {
+    "repository": "kungfu-systems/taolu",
+    "sourceSha": "fd8c496720d054953f8c336608e36bc85fac342b",
+    "version": "1.0.0-alpha.0",
+    "tag": "v1.0.0-alpha.0",
+    "channel": "alpha"
+  },
+  "qualificationRoot": "sha256:dc1d63b8d8032f20ada490d48c1a3f9b61e7bb23e953070405ee258fa66b0895",
+  "signedChannelRoot": "sha256:2ecd386c0da82edfc97382494e4bdbebd547016f63bbb840a2d3cc3a9d06f882"
+}
