@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 106,
+  "generation": 107,
   "fencingCounter": 15,
   "policy": {
     "agingSeconds": 900,
@@ -800,8 +800,47 @@
         "package.json"
       ],
       "shardEvidenceRoots": []
+    },
+    {
+      "repository": "kungfu-systems/taolu",
+      "protectedBase": "dev/v1/v1.0",
+      "pullRequestNumber": 35,
+      "assignmentRoot": "sha256:e6d9aba831654ea3959c5adef511e3035a55e96b04f72e3422bc33e3cf7b38c9",
+      "initiativeRoot": "sha256:71d3bf67607ad7ca26270805bd0b37febb532889f0eeeff083726556e16f2288",
+      "sourceIdentityRoot": "sha256:c6b2304fdff8fa6e5dc49e6eb5ad5f96441e9d54ebd2ebb1a64aaa0a7b9ad694",
+      "deliveryClass": "native-proof-required",
+      "candidateId": "sha256:eac84f44731588778ec49539b3beb882d9bb3b352c59be03377b5b2ab1f161ae",
+      "sourceHead": "cd1ffdd701ec9c457dc93f5e4964d3e5e1bb25be",
+      "sourcePatchRoot": "sha256:7fb247bf319aa05e975a062142948ca90e211145cd26de39ce7b7653a0183a30",
+      "sourceProofRoot": "sha256:81a2d326a8cddfd20d79405ad76d860a01b89027962e88db0dbffad350c13b61",
+      "planRoot": "sha256:20486d4b71bf6c58677ae2365a00bc77db63fe95cec83938b4e54b58ceef6c08",
+      "closureRoot": "sha256:733db96f5f8b47350e20dff8ec7a5ae9c7073cee22ff4844e4a0bb1db3baaee5",
+      "dependencyRoot": "sha256:1df25bbfc411eaba9b8e1828b650ae27ae070ef816d292b5dd94efe9fa4ceb77",
+      "toolchainRoot": "sha256:7f108a4e76ed7427b6b10caebb0e83d4b903ec63597f01899650603c54a6b81f",
+      "environmentRoot": "sha256:11582472f7ff18d9a62da67f83a6d64073479042c39c1d7a31ac2afa1f58c695",
+      "nativeCommandContract": {
+        "schema": "kungfu.buildchain.native-command-contract/v1",
+        "runner": "bash-lc",
+        "command": "go test -race ./... && go vet ./...",
+        "commandRoot": "sha256:d377012419cbb09c8d8fde5818a4b7ce11b19b6a61a5752c6f877253d926d498"
+      },
+      "sourceWorkflowRunId": 34029691502,
+      "priority": "ordinary",
+      "enqueuedAt": "2026-09-06T11:18:58.926Z",
+      "updatedAt": "2026-09-06T11:18:58.926Z",
+      "attempts": 1,
+      "recoveries": 0,
+      "status": "queued",
+      "terminal": null,
+      "affectedPaths": [
+        "cmd/build/main.go",
+        "cmd/build/main_test.go",
+        "internal/product/version.json",
+        "package.json"
+      ],
+      "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T11:16:19.730Z",
-  "stateRoot": "sha256:62edfa80e7452dc6e743fd9f946e12e3ba30409a28e3c0378342c6b33d36e3fe"
+  "updatedAt": "2026-09-06T11:18:58.926Z",
+  "stateRoot": "sha256:f512dd1d95f06561d6152d98864de9a074bf917e70cc4e800c2cd9eaf75a23f9"
 }
