@@ -22,7 +22,13 @@ func main() {
 	}
 }
 func run() error {
-	platform := os.Getenv("BUILDCHAIN_PLATFORM")
+	platform := os.Getenv("BUILDCHAIN_PLATFORM_ID")
+	if platform == "" {
+		platform = os.Getenv("INPUT_PLATFORM-ID")
+	}
+	if platform == "" {
+		platform = os.Getenv("BUILDCHAIN_PLATFORM")
+	}
 	if platform == "" {
 		arch := map[string]string{"amd64": "x64", "arm64": "arm64"}[runtime.GOARCH]
 		platform = runtime.GOOS + "-" + arch
