@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 93,
+  "generation": 94,
   "fencingCounter": 13,
   "policy": {
     "agingSeconds": 900,
@@ -13,7 +13,7 @@
   },
   "activeWarrant": {
     "schema": "kungfu.buildchain.dev-delivery-warrant/v1",
-    "phase": "provisional",
+    "phase": "qualified",
     "repository": "kungfu-systems/taolu",
     "protectedBase": "dev/v1/v1.0",
     "candidateId": "sha256:e5d85454bcef2c538c1d911e44c2308ee41c537f51467cc30f7fe7a3c8506ced",
@@ -46,8 +46,13 @@
     "issuedAt": "2026-09-06T02:05:58.714Z",
     "expiresAt": "2026-09-06T03:07:25.535Z",
     "fencingToken": "sha256:298129bea401491c69f188f7e6098372aa56a54a729449ce9dff28d4e07f3a2d",
-    "nextAction": "Run or reuse exact native proof under this fence, then atomically qualify before merge admission.",
-    "heartbeatAt": "2026-09-06T02:07:25.535Z"
+    "nextAction": "Enter the GitHub merge queue at the exact fenced PR head; merge_group remains final authority.",
+    "heartbeatAt": "2026-09-06T02:07:25.535Z",
+    "nativeProofRoot": "sha256:a16d860e9cc986ae8a453fa792949b168b0e5035990727e1298f4d2e3785f00b",
+    "nativeExecutionReceiptRoot": "sha256:70d5b79ca54eaf73d8b7779fe3d8d5ae7371a77d52ac23b1285a21f1b0c1e460",
+    "nativeProofReuseRoot": "sha256:2417e0266c9620bb8c60b455f5931c51f5f6b9d41907b560c81d80c5804ad653",
+    "qualificationReceiptRoot": "sha256:a311b7dba4c864d965d6999c05ef1f0da32ce3de7887c29931b9d33a4d2cd23a",
+    "qualifiedAt": "2026-09-06T02:07:56.531Z"
   },
   "candidates": [
     {
@@ -700,10 +705,10 @@
       "sourceWorkflowRunId": 33975786413,
       "priority": "ordinary",
       "enqueuedAt": "2026-09-06T02:05:55.131Z",
-      "updatedAt": "2026-09-06T02:07:25.535Z",
+      "updatedAt": "2026-09-06T02:07:56.531Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "proving",
+      "status": "qualified",
       "terminal": null,
       "affectedPaths": [
         ".github/workflows/verify.yml"
@@ -711,6 +716,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T02:07:25.535Z",
-  "stateRoot": "sha256:e4929417db31f24b42c86dd86e295e0f262635b02fddafc29c6ab429038dfbcc"
+  "updatedAt": "2026-09-06T02:07:56.531Z",
+  "stateRoot": "sha256:6913530def4da3a7b294bb0e1f4e359c9ebb717dc4ec9a548e168158dbd6856c"
 }
