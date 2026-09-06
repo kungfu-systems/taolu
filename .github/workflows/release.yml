@@ -93,7 +93,7 @@ jobs:
       github-release-title: Taolu ${{ inputs.channel }}
       github-release-payload-patterns: |
         taolu-*
-      publish-artifact-kind: binary
+      publish-artifact-kind: custom
       release-passport: true
       release-passport-product-name: Taolu
       publication-auto-admission: true
