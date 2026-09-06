@@ -3,7 +3,7 @@
   "contract": "kungfu-buildchain-dev-delivery-warrant-queue",
   "repository": "kungfu-systems/taolu",
   "protectedBase": "dev/v1/v1.0",
-  "generation": 105,
+  "generation": 106,
   "fencingCounter": 15,
   "policy": {
     "agingSeconds": 900,
@@ -781,11 +781,20 @@
       "sourceWorkflowRunId": 34028714336,
       "priority": "ordinary",
       "enqueuedAt": "2026-09-06T11:01:46.512Z",
-      "updatedAt": "2026-09-06T11:01:46.512Z",
+      "updatedAt": "2026-09-06T11:16:19.730Z",
       "attempts": 1,
       "recoveries": 0,
-      "status": "queued",
-      "terminal": null,
+      "status": "cancelled",
+      "terminal": {
+        "outcome": "cancelled",
+        "reason": "",
+        "evidenceRoot": "sha256:7bcf639b55b7992e758eba296cdf41b486c319a50965e215bb0985c2e55b3afd",
+        "authority": "queued-candidate-cancellation",
+        "expectedSourceHead": "a09c75dad88aa449cbb2d990e5ec2d0b8c6a2f41",
+        "observedSourceHead": "a09c75dad88aa449cbb2d990e5ec2d0b8c6a2f41",
+        "eventAction": "closed",
+        "closedAt": "2026-09-06T11:16:19.730Z"
+      },
       "affectedPaths": [
         "internal/product/version.json",
         "package.json"
@@ -793,6 +802,6 @@
       "shardEvidenceRoots": []
     }
   ],
-  "updatedAt": "2026-09-06T11:14:01.320Z",
-  "stateRoot": "sha256:b04245976bb684d57344806583fd615ca74ae757a6359280acdc1891d0fe5b25"
+  "updatedAt": "2026-09-06T11:16:19.730Z",
+  "stateRoot": "sha256:62edfa80e7452dc6e743fd9f946e12e3ba30409a28e3c0378342c6b33d36e3fe"
 }
